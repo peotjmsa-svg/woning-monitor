@@ -1,8 +1,8 @@
 name: Woning monitor
 
 on:
-  schedule:
-    - cron: "*/15 * * * *"   # elke 15 min (GitHub loopt soms een paar minuten achter)
+  # Geen schedule: Cloudflare blokkeert de servers van GitHub (403), daarom draait
+  # de monitor via Windows Taakplanner op een pc thuis (zie README).
   workflow_dispatch:          # handmatig starten via de Actions-tab
 
 permissions:

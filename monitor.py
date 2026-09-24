@@ -465,8 +465,37 @@ def test_one(url):
     print("MATCH" if ok else "AFGEWEZEN", reasons, warnings)
 
 
+def load_env_file():
+    """Leest GMAIL_USER e.d. uit .env naast dit script (voor draaien op je eigen pc)."""
+    f = Path(__file__).with_name(".env")
+    if not f.exists():
+        return
+    for line in f.read_text(encoding="utf-8-sig").splitlines():
+        key, sep, value = line.partition("=")
+        if sep and key.strip() and not key.lstrip().startswith("#"):
+            os.environ.setdefault(key.strip(), value.strip().strip('"'))
+
+
+def log_to_file_if_windowless():
+    """Via Taakplanner (pythonw) is er geen console: schrijf de output naar monitor.log.
+    Geeft True als er geen console is."""
+    if sys.stdout is not None:
+        return False
+    log = Path(__file__).with_name("monitor.log")
+    if log.exists() and log.stat().st_size > 1_000_000:
+        log.replace(log.with_suffix(".log.old"))
+    sys.stdout = sys.stderr = open(log, "a", encoding="utf-8", buffering=1)
+    print(f"\n=== {datetime.now():%Y-%m-%d %H:%M}")
+    return True
+
+
 if __name__ == "__main__":
+    windowless = log_to_file_if_windowless()
+    load_env_file()
     if len(sys.argv) == 3 and sys.argv[1] == "--test":
         test_one(sys.argv[2])
+    elif windowless and not (os.environ.get("GMAIL_USER") and os.environ.get("GMAIL_APP_PASSWORD")):
+        # Anders worden woningen als gezien gemarkeerd zonder dat je ze gemaild krijgt
+        print("Overgeslagen: vul eerst GMAIL_USER en GMAIL_APP_PASSWORD in .env in")
     else:
         run()
