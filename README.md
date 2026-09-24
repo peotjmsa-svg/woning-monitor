@@ -1,5 +1,9 @@
 # Woning-monitor Amsterdam
 
+> **Nieuw:** er is ook een versie die de e-mailalerts van de sites leest en op GitHub Actions
+> draait, zodat je pc niet aan hoeft te staan. Zie [`housing_monitor/README.md`](housing_monitor/README.md).
+> De scraper hieronder werkt alleen vanaf een thuisverbinding.
+
 Checkt elke 15 minuten (vanaf een pc thuis) Pararius en Huurwoningen.nl, leest de beschrijving van elke nieuwe woning en mailt alleen de woningen die passen.
 
 ## Wat hij filtert
