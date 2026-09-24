@@ -1,0 +1,126 @@
+{
+ "entries": [
+  {
+   "area": "buiten de ring",
+   "name": "Appartement Dorus Rijkershof in Amsterdam, 1064 GL (buiten de ring)",
+   "postcode": "1064GL",
+   "price": 708,
+   "reason": "buiten de ring (1064 GL), woningruil",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 60,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-24T19:22:57+00:00",
+   "url": "https://www.huurwoningen.nl/huren/amsterdam/2effc3b5/dorus-rijkershof/"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "Appartement Klipperstraat in Amsterdam, 1034 XH (buiten de ring)",
+   "postcode": "1034XH",
+   "price": 720,
+   "reason": "buiten de ring (1034 XH), woningruil",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 60,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-24T19:23:01+00:00",
+   "url": "https://www.huurwoningen.nl/huren/amsterdam/e2efb18a/klipperstraat/"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "Appartement Marius Meijboomstraat in Amsterdam, 1087 LD (buiten de ring)",
+   "postcode": "1087LD",
+   "price": 700,
+   "reason": "buiten de ring (1087 LD), woningruil",
+   "result": "afgewezen",
+   "rooms": 5,
+   "site": "Huurwoningen",
+   "size": 110,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-24T19:23:05+00:00",
+   "url": "https://www.huurwoningen.nl/huren/amsterdam/bc85fb89/marius-meijboomstraat/"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "Huis Jacob Honigstraat in Amsterdam, 1035 XV (buiten de ring)",
+   "postcode": "1035XV",
+   "price": 715,
+   "reason": "buiten de ring (1035 XV), woningruil",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 75,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-24T19:23:11+00:00",
+   "url": "https://www.huurwoningen.nl/huren/amsterdam/7a45d0a1/jacob-honigstraat/"
+  },
+  {
+   "area": "Zuid",
+   "name": "Appartement Victorieplein in Amsterdam, 1078 PG (Zuid)",
+   "postcode": "1078PG",
+   "price": 1000,
+   "reason": "woningruil",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 80,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-24T19:23:13+00:00",
+   "url": "https://www.huurwoningen.nl/huren/amsterdam/ef14df05/victorieplein/"
+  },
+  {
+   "area": "Zuid",
+   "name": "Appartement Argonautenstraat in Amsterdam, 1076 KJ (Zuid)",
+   "postcode": "1076KJ",
+   "price": 3000,
+   "reason": "niet voor woningdelers",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 80,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-24T19:23:22+00:00",
+   "url": "https://www.huurwoningen.nl/huren/amsterdam/7b275e37/argonautenstraat/"
+  },
+  {
+   "area": "Oost",
+   "name": "Huis Stuurmankade in Amsterdam, 1019 WC (Oost)",
+   "postcode": "1019WC",
+   "price": 2140,
+   "reason": "De woning ligt binnen de A10-ring (1019 WC), heeft 4 kamers perfect voor 3 personen, en €2140 voor deze specificaties is een duidelijk goede deal. Geen problematische inkomens- of studieplaatseis.",
+   "result": "gemaild",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 102,
+   "source": "scraper",
+   "stage": "Claude (advertentie)",
+   "t": "2026-09-24T19:23:53+00:00",
+   "url": "https://www.huurwoningen.nl/huren/amsterdam/aa65e4cb/stuurmankade/"
+  }
+ ],
+ "sites": {
+  "Huurwoningen": {
+   "error": null,
+   "found": 30,
+   "new": 10,
+   "ok": true,
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "Pararius": {
+   "error": null,
+   "found": 30,
+   "new": 0,
+   "ok": true,
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  }
+ },
+ "updated": "2026-09-24T19:23:58+00:00"
+}

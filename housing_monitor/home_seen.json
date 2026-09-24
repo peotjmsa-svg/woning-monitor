@@ -36,6 +36,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
   },
+  "2effc3b5": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
   "4963160a": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
@@ -100,6 +104,14 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "7a45d0a1": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "7b275e37": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
   "7dbd2397": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
@@ -124,6 +136,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
   },
+  "9c156232": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
   "a12385bf": {
    "result": "al gezien",
    "t": "2026-09-24T19:07:45.603792+00:00"
@@ -132,6 +148,10 @@
    "result": "match",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "aa65e4cb": {
+   "result": "gemaild",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
   "ab4a650a": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
@@ -139,6 +159,10 @@
   "ac78c8f4": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "b2d38b5f": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
   },
   "b625fb72": {
    "result": "afgewezen",
@@ -152,6 +176,10 @@
    "result": "al gezien",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "b8684310": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
   "bc0297f5": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
@@ -159,6 +187,10 @@
   "bc5c8f9b": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
+  },
+  "bc85fb89": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
   },
   "bfb99d0b": {
    "result": "afgewezen",
@@ -171,6 +203,10 @@
   "df710955": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "e2efb18a": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
   },
   "e32a781d": {
    "result": "afgewezen",
@@ -187,6 +223,10 @@
   "ed102814": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
+  },
+  "ef14df05": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
   },
   "f14b6661": {
    "result": "afgewezen",
@@ -220,6 +260,10 @@
    "result": "match",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "pc:1019WC:2140": {
+   "result": "gemaild",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
   "pc:1021CV:677": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
@@ -239,6 +283,14 @@
   "pc:1034DC:680": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
+  },
+  "pc:1034XH:720": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "pc:1035XV:715": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
   },
   "pc:1053KX:2975": {
    "result": "afgewezen",
@@ -272,9 +324,13 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
-  "pc:1064NS:2850": {
+  "pc:1064GL:708": {
    "result": "afgewezen",
-   "t": "2026-09-24T18:55:23.250104+00:00"
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "pc:1064NS:2850": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
   },
   "pc:1066AT:1895": {
    "result": "afgewezen",
@@ -324,6 +380,14 @@
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
   },
+  "pc:1076KJ:3000": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "pc:1078PG:1000": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
   "pc:1078XA:2400": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
@@ -333,12 +397,16 @@
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
   "pc:1087GC:3000": {
-   "result": "afgewezen",
-   "t": "2026-09-24T18:55:23.250104+00:00"
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
   },
   "pc:1087GT:2500": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "pc:1087LD:700": {
    "result": "afgewezen",
-   "t": "2026-09-24T18:55:23.250104+00:00"
+   "t": "2026-09-24T19:22:45.670638+00:00"
   },
   "pc:1087MP:2650": {
    "result": "afgewezen",
@@ -379,6 +447,46 @@
   "pc:1106EJ:2050": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/2effc3b5/dorus-rijkershof": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/7a45d0a1/jacob-honigstraat": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/7b275e37/argonautenstraat": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/9c156232/mattenbiesstraat": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/aa65e4cb/stuurmankade": {
+   "result": "gemaild",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/b2d38b5f/kiekstraat": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/b8684310/mezquitalaan": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/bc85fb89/marius-meijboomstraat": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/e2efb18a/klipperstraat": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/ef14df05/victorieplein": {
+   "result": "afgewezen",
+   "t": "2026-09-24T19:22:45.670638+00:00"
   }
  }
 }
