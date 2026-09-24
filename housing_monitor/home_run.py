@@ -183,6 +183,52 @@ def read_generic(client, html, url):
     return detail, verdict, warnings
 
 
+def run_mijndak(name, client, seen, mark, record, sites_status, now):
+    """Mijndak via je account: passend én niet-passend aanbod, alleen woningen.
+    Geeft het aantal beoordeelde woningen."""
+    import mijndak
+    try:
+        pubs = mijndak.fetch_publications()
+    except Exception as e:                  # inloggen mislukt, Playwright ontbreekt, site stuk
+        log(f"{name}: mislukt: {e}")
+        sites_status[name] = {"t": now, "ok": False, "found": 0, "error": str(e)[:200]}
+        return 0
+    details = [mijndak.to_detail(p, label) for p, label in pubs]
+    homes = [d for d in details if d["is_home"]]
+    new = [d for d in homes if not seen([f"mijndak:{d['id']}"])]
+    sites_status[name] = {"t": now, "ok": True, "found": len(homes), "new": len(new), "error": None}
+    log(f"{name}: {len(homes)} woningen ({sum(d['passend'] for d in homes)} passend), {len(new)} nieuw")
+    checked = 0
+    for d in new:
+        # Geen url-sleutel: alle detaillinks delen het pad /HuisDetails (alleen de query verschilt)
+        pc_key = A.postcode_key({"address": d["postcode"] or "", "price_eur": d["price"]})
+        keys = [f"mijndak:{d['id']}"] + ([pc_key] if pc_key else [])
+        if seen(keys[1:]):                  # al via een andere site gezien
+            mark(keys, "al gezien")
+            continue
+        ok, reasons, warnings = M.evaluate(dict(d, description=""))   # alleen prijs/kamers/gebied
+        d["area"] = M.classify_area(d["postcode"])
+        listing = as_listing(d)
+        if not ok:
+            record("scraper", name, keys, listing, "afgewezen", "filters", ", ".join(reasons))
+            continue
+        checked += 1
+        listing["other_details"] = d["description"]
+        try:
+            verdict = A.judge_listing(client, listing)
+        except (A.anthropic.APIError, RuntimeError) as e:
+            log(f"  Claude-fout bij {d['name']}: {e} (volgende run opnieuw)")
+            continue
+        if not d["passend"]:
+            warnings.append("mijndak vindt deze woning niet passend voor je profiel (check of je mag reageren)")
+        if verdict["verdict"] == "geen fit":
+            record("scraper", name, keys, listing, "afgewezen", "Claude (mijndak)", verdict["reason"])
+        else:
+            record("scraper", name, keys, listing, "gemaild", "Claude (mijndak)", verdict["reason"],
+                   {"listing": listing, "verdict": verdict, "warnings": warnings})
+    return checked
+
+
 def run(dry_run=False):
     if not dry_run:
         pulled = git("pull", "--rebase", "--autostash", "-q")
@@ -245,6 +291,9 @@ def run(dry_run=False):
     # 2. Zelf zoeken op de sites uit de instellingen
     budget = CONFIG.MAX_DETAIL_FETCHES_PER_RUN
     for site in CONFIG.SITES:
+        if site["type"] == "mijndak":
+            n_checked += run_mijndak(site["name"], client, seen, mark, record, sites_status, now)
+            continue
         name, generic = site["name"], site["type"] == "generic"
         try:
             html = M.fetch(session, site["search_url"])

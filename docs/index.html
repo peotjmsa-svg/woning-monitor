@@ -644,7 +644,7 @@
       const div = document.createElement("div");
       div.className = "site";
       div.innerHTML =
-        `<div class="site-head"><div><span class="name">${esc(site.name)}</span> <span class="pill ${site.type === "builtin" ? "ok" : "warn"}">${site.type === "builtin" ? "vaste code" : "Claude leest"}</span></div>` +
+        `<div class="site-head"><div><span class="name">${esc(site.name)}</span> <span class="pill ${site.type === "generic" ? "warn" : "ok"}">${{ builtin: "vaste code", generic: "Claude leest", mijndak: "met je account" }[site.type] || site.type}</span></div>` +
         `<div class="check" style="padding:0"><input type="checkbox" id="en${i}" ${site.enabled !== false ? "checked" : ""}><span><label for="en${i}" style="display:inline;margin:0">Actief</label></span></div></div>` +
         status +
         `<div><label for="su${i}">Zoek-URL</label><input type="url" id="su${i}" value="${esc(site.search_url)}"></div>` +

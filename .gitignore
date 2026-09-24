@@ -4,3 +4,4 @@ __pycache__/
 .env
 monitor.log*
 state.json
+.mijndak_session.json

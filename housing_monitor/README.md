@@ -84,6 +84,13 @@ heet `Woning-monitor` en draait `housing_monitor\home_run.py`; de log staat in
 .venv\Scripts\python housing_monitor\home_run.py --dry-run
 ```
 
+**Mijndak** (amsterdam.mijndak.nl) toont woningen alleen aan ingelogde leden. Zet
+`MIJNDAK_USERNAME` en `MIJNDAK_PASSWORD` in `.env`; de pc logt dan in met een onzichtbare
+browser (Playwright: `pip install playwright` en `python -m playwright install chromium`)
+en leest je passende én niet-passende aanbod. Alleen woningen, geen parkeerplaatsen. Bij
+een geweigerde inlog probeert hij het die run niet opnieuw, om blokkering te voorkomen. De
+sessie staat in `.mijndak_session.json` (niet in git).
+
 Later op een Raspberry Pi: zelfde repo klonen, `.env` invullen, Claude Code installeren
 en inloggen, en `home_run.py` elk kwartier via cron draaien.
 
