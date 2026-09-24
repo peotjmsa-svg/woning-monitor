@@ -1,0 +1,70 @@
+{
+  "max_price": 3000,
+  "min_rooms": 4,
+  "areas": {
+    "Centrum": [
+      [
+        1011,
+        1018
+      ]
+    ],
+    "West": [
+      [
+        1051,
+        1059
+      ]
+    ],
+    "Zuid": [
+      [
+        1071,
+        1079
+      ]
+    ],
+    "Oost": [
+      [
+        1019,
+        1019
+      ],
+      [
+        1091,
+        1098
+      ]
+    ]
+  },
+  "area_max_price_per_room": {
+    "Oost": 625
+  },
+  "include_unknown_postcode": true,
+  "reject": {
+    "no_students": true,
+    "no_guarantor": true,
+    "no_sharing": true,
+    "swap": true
+  },
+  "income_reject_above": null,
+  "criteria_text": "- Locatie: binnen de Amsterdamse A10-ring. Oost mag, maar alleen bij een duidelijk goede deal.\n- Budget: max €3000/maand\n- Aantal kamers: 4 of meer\n- Oppervlakte: maakt niet uit\n- We zoeken met 3 personen (2 kan ook, dan wel een extra kamer naast de woonkamer)\n- We zijn studenten: listings met een hoge inkomenseis vallen af\n- Let op: listings die een \"moet studeren in Amsterdam\"-eis stellen zijn problematisch — een van ons studeert een niet-Amsterdamse master, dus flag dat expliciet als risico i.p.v. het gewoon af te keuren",
+  "fallback_minutes": 60,
+  "alert_senders": [
+    "pararius",
+    "huurwoningen"
+  ],
+  "sites": [
+    {
+      "name": "Pararius",
+      "type": "builtin",
+      "enabled": true,
+      "search_url": "https://www.pararius.nl/huurwoningen/amsterdam/0-3000/4-aantalkamers"
+    },
+    {
+      "name": "Huurwoningen",
+      "type": "builtin",
+      "enabled": true,
+      "search_url": "https://www.huurwoningen.nl/in/amsterdam/?price=0-3000&rooms=4&sort=published_at&direction=desc"
+    }
+  ],
+  "max_detail_fetches_per_run": 25,
+  "request_delay": [
+    2.0,
+    4.0
+  ]
+}

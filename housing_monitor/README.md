@@ -109,9 +109,27 @@ python housing_monitor/check_alerts.py --eml pad/naar/alert.eml
 Dat gebruikt je eigen Claude Code-login op die pc en laat per woning het oordeel zien,
 zonder IMAP, zonder mail en zonder iets op te slaan.
 
+## Webapp: filters, sites en overzicht
+
+https://peotjmsa-svg.github.io/woning-monitor/ (bron: `docs/index.html`)
+
+- **Overzicht:** woningen per dag, afwijsredenen, gebieden, prijzen, per bron, en een
+  doorzoekbare lijst. Komt uit `log_github.json` en `log_home.json`.
+- **Filters:** budget, kamers, gebieden (postcodes, max €/kamer), afwijsregels, de criteria
+  voor Claude en de timing.
+- **Sites:** zoekpagina's voor de pc aan/uit zetten, aanpassen of een nieuwe site toevoegen
+  (zoek-URL + een stukje tekst dat in elke advertentielink staat), en de afzenders van
+  alert-mails.
+
+Kijken kan zonder inloggen. Voor opslaan koppel je eenmalig een fine-grained GitHub-token
+met alleen *Contents: Read and write* op deze repository (instructies staan in de app).
+Opslaan schrijft `housing_monitor/settings.json`; beide monitors gebruiken het vanaf hun
+volgende run. Is het bestand ongeldig, dan gelden de standaardwaarden uit `config.py` en
+staat er een waarschuwing in de log.
+
 ## Aanpassen
 
-- **Criteria:** `CRITERIA` en `JUDGE_SYSTEM` in `check_alerts.py`
+- **Filters, sites, criteria:** via de webapp (of `housing_monitor/settings.json`)
 - **Model:** standaard `claude-sonnet-4-5`; een ander model kan via een extra secret/variabele
   `CLAUDE_MODEL` (toevoegen aan `env:` in de workflow)
 - **Frequentie:** de `cron` in `.github/workflows/housing-monitor.yml`

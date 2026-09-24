@@ -41,25 +41,13 @@ import config as CONFIG  # noqa: E402  zelfde prijs/kamers/gebieden als de scrap
 STATE_FILE = Path(__file__).with_name("seen_listings.json")   # GitHub: afgehandelde woningen
 QUEUE_FILE = Path(__file__).with_name("queue.json")           # GitHub: wachten op controle thuis
 HOME_SEEN_FILE = Path(__file__).with_name("home_seen.json")   # pc thuis: gecontroleerde woningen
-# Zo lang wacht een kandidaat op controle door de pc thuis; daarna mailt GitHub hem ongecontroleerd
-FALLBACK_MINUTES = int(os.environ.get("FALLBACK_MINUTES") or 60)
+LOG_GITHUB_FILE = Path(__file__).with_name("log_github.json") # logboek voor het overzicht in de webapp
+LOG_HOME_FILE = Path(__file__).with_name("log_home.json")     # idem, geschreven door de pc thuis
+LOG_MAX_ENTRIES = 2000
 MODEL = os.environ.get("CLAUDE_MODEL") or "claude-sonnet-4-5"
-SENDERS = ["pararius", "huurwoningen"]      # matcht op het afzenderadres; meer sites: hier toevoegen
 LOOKBACK_DAYS = 7                            # zo ver terug kijken naar alert-mails
 STATE_TTL_DAYS = 90
 MAX_EMAIL_CHARS = 60_000                     # langer dan dit: melden i.p.v. stil afkappen
-
-# Precies de criteria zoals opgegeven; dit gaat letterlijk naar Claude.
-CRITERIA = """\
-- Locatie: binnen de Amsterdamse A10-ring. Oost mag, maar alleen bij een duidelijk goede deal.
-- Budget: max €3000/maand
-- Aantal kamers: 4 of meer
-- Oppervlakte: maakt niet uit
-- We zoeken met 3 personen (2 kan ook, dan wel een extra kamer naast de woonkamer)
-- We zijn studenten: listings met een hoge inkomenseis vallen af
-- Let op: listings die een "moet studeren in Amsterdam"-eis stellen zijn problematisch — \
-een van ons studeert een niet-Amsterdamse master, dus flag dat expliciet als risico i.p.v. \
-het gewoon af te keuren"""
 
 LISTING_ID_RE = re.compile(
     r"(?:pararius\.nl|huurwoningen\.nl)/[a-z-]+/[a-z0-9-]+/([0-9a-f]{8})(?:/|$|\?)")
@@ -257,11 +245,31 @@ JUDGE_TOOL = {
     },
 }
 
-JUDGE_SYSTEM = f"""\
+def fallback_minutes():
+    """Zo lang wacht een kandidaat op controle door de pc thuis; daarna mailt GitHub hem
+    ongecontroleerd. Instelbaar in de webapp; FALLBACK_MINUTES in de omgeving wint."""
+    return int(os.environ.get("FALLBACK_MINUTES") or CONFIG.FALLBACK_MINUTES)
+
+
+def reject_rules():
+    """De afwijsregels uit settings.json als tekst voor Claude."""
+    rules = [text for on, text in (
+        (CONFIG.REJECT_NO_STUDENTS, "de verhuurder geen studenten wil"),
+        (CONFIG.REJECT_NO_GUARANTOR, "een garantsteller niet geaccepteerd wordt"),
+        (CONFIG.REJECT_NO_SHARING, "woningdelers niet toegestaan zijn"),
+        (CONFIG.REJECT_SWAP, "het een woningruil is"),
+    ) if on]
+    return ("Afwijzen (\"geen fit\") als de advertentie zegt dat " + "; of dat ".join(rules) + ".") if rules else ""
+
+
+def judge_system():
+    """Systeemprompt voor het oordeel, met de criteria en afwijsregels uit settings.json."""
+    return f"""\
 Je beoordeelt huurwoningen in Amsterdam voor een groep studenten.
 
 Zoekcriteria:
-{CRITERIA}
+{CONFIG.CRITERIA_TEXT}
+{reject_rules()}
 
 Hulp bij de locatie: binnen de A10-ring liggen o.a. Centrum, West (Oud-West, \
 De Baarsjes, Westerpark, Bos en Lommer), Zuid (Oud-Zuid, De Pijp, Rivierenbuurt) en \
@@ -363,7 +371,7 @@ def judge_listing(client, listing):
              ("address", "city", "price_eur", "rooms", "bedrooms", "size_m2",
               "income_requirement_text", "other_details")}
     return call_tool(
-        client, JUDGE_TOOL, JUDGE_SYSTEM,
+        client, JUDGE_TOOL, judge_system(),
         "Beoordeel deze woning:\n" + json.dumps(facts, ensure_ascii=False, indent=1),
         max_tokens=1000,
     )
@@ -446,6 +454,42 @@ def save_json(path, data):
     path.write_text(json.dumps(data, indent=1, sort_keys=True, ensure_ascii=False), encoding="utf-8")
 
 
+def log_event(source, site, listing, result, stage, reason):
+    """Eén regel voor het overzicht in de webapp. listing: dict met address/price_eur/rooms/..."""
+    pc = postcode_of(listing)
+    url = listing.get("url") or ""
+    if "track." not in url:          # tracking-links hebben hun query nodig; andere niet
+        url = url.split("?")[0]
+    return {
+        "t": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "source": source, "site": site,
+        "name": listing.get("address"), "postcode": pc, "area": area_of(pc),
+        "price": listing.get("price_eur"), "rooms": listing.get("rooms"), "size": listing.get("size_m2"),
+        "result": result, "stage": stage, "reason": (reason or "")[:300],
+        "url": url,
+    }
+
+
+def save_log(path, events, sites=None):
+    """Voegt regels toe aan een logboek (max LOG_MAX_ENTRIES, max STATE_TTL_DAYS oud)."""
+    data = load_json(path, {"entries": [], "sites": {}})
+    data["entries"].extend(events)
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=STATE_TTL_DAYS)).isoformat()
+    data["entries"] = [e for e in data["entries"] if e["t"] >= cutoff][-LOG_MAX_ENTRIES:]
+    if sites:
+        data["sites"].update(sites)
+    data["updated"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    save_json(path, data)
+
+
+def sender_site(sender):
+    s = sender.lower()
+    for name in ("pararius", "huurwoningen", "funda", "kamernet"):
+        if name in s:
+            return name.capitalize()
+    return sender.split("<")[0].strip().strip('"') or "Mail"
+
+
 def home_keys():
     """Sleutels die de pc thuis al heeft afgehandeld (alleen lezen; de pc schrijft dit bestand)."""
     return set(load_json(HOME_SEEN_FILE, {}).get("listings", {}))
@@ -461,7 +505,7 @@ def save_state(state):
 
 # ---------------------------------------------------------------- verwerking
 
-def process_message(client, msg, state, known):
+def process_message(client, msg, state, known, events=None):
     """Verwerkt één alert-mail. `known` = sleutels die al ergens zijn afgehandeld of in de
     wachtlijst staan. Geeft (kandidaten voor de wachtlijst, sleutels om als afgehandeld op
     te slaan, aantal nieuwe woningen). Gooit een exceptie als iets misgaat; de mail wordt
@@ -470,6 +514,8 @@ def process_message(client, msg, state, known):
     text, links = email_to_text(msg)
     listings = extract_listings(client, subject, sender, text, links)
     log(f"  '{subject[:70]}': {len(listings)} woning(en) gevonden")
+    site = sender_site(sender)
+    events = events if events is not None else []
 
     candidates, done_keys, new = [], [], 0
     for l in listings:
@@ -482,14 +528,17 @@ def process_message(client, msg, state, known):
         reason = prefilter(l)
         if reason:
             log(f"    voorfilter {l.get('address')}: {reason}")
+            events.append(log_event("mail", site, l, "afgewezen", "voorfilter", reason))
             done_keys.extend(keys)
             continue
         verdict = judge_listing(client, l)
         log(f"    {verdict['verdict']:9} {l.get('address')} {fmt_price(l.get('price_eur'))}"
             f" {l.get('rooms')}k: {verdict['reason']}")
         if verdict["verdict"] in ("fit", "twijfel"):
-            candidates.append({"keys": keys, "listing": l, "verdict": verdict})
+            candidates.append({"keys": keys, "listing": l, "verdict": verdict, "site": site})
+            events.append(log_event("mail", site, l, "wachtlijst", "Claude (mail)", verdict["reason"]))
         else:
+            events.append(log_event("mail", site, l, "afgewezen", "Claude (mail)", verdict["reason"]))
             done_keys.extend(keys)
     return candidates, done_keys, new
 
@@ -500,7 +549,7 @@ def fetch_alert_messages(imap, state):
     imap.select("INBOX")
     since = (datetime.now() - timedelta(days=LOOKBACK_DAYS)).strftime("%d-%b-%Y")
     ids = set()
-    for sender in SENDERS:
+    for sender in CONFIG.ALERT_SENDERS:
         typ, data = imap.search(None, "SINCE", since, "FROM", f'"{sender}"')
         if typ == "OK" and data and data[0]:
             ids.update(data[0].split())
@@ -547,11 +596,13 @@ def run():
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(os.environ["GMAIL_ADDRESS"], os.environ["GMAIL_APP_PASSWORD"])
     try:
+        if CONFIG.SETTINGS_ERROR:
+            log(f"LET OP: {CONFIG.SETTINGS_ERROR}")
         todo = fetch_alert_messages(imap, state)
-        done, n_new, n_queued, failed = [], 0, 0, 0
+        done, n_new, n_queued, failed, events = [], 0, 0, 0, []
         for imap_id, mid, msg in todo:
             try:
-                candidates, done_keys, new = process_message(client, msg, state, known)
+                candidates, done_keys, new = process_message(client, msg, state, known, events)
             except (anthropic.APIError, RuntimeError) as e:
                 failed += 1
                 log(f"  FOUT bij '{header(msg, 'Subject')[:60]}': {e} (volgende run opnieuw)")
@@ -570,7 +621,7 @@ def run():
         # Wachtlijst: wat de pc thuis al gecontroleerd heeft valt eraf; wat te lang wacht
         # wordt ongecontroleerd gemaild.
         keep, overdue = [], []
-        deadline = (now_dt - timedelta(minutes=FALLBACK_MINUTES)).isoformat()
+        deadline = (now_dt - timedelta(minutes=fallback_minutes())).isoformat()
         for it in queue["items"]:
             if any(k in home for k in it["keys"]):
                 log(f"  ✔ {it['listing'].get('address')}: al gecontroleerd door de pc thuis")
@@ -588,12 +639,15 @@ def run():
             for it in overdue:
                 for k in it["keys"]:
                     state["listings"][k] = now
+                events.append(log_event("mail", it.get("site", "Mail"), it["listing"],
+                                        "gemaild (niet gecontroleerd)", "vangnet", it["verdict"]["reason"]))
         queue["items"] = keep
 
         for imap_id, mid in done:
             state["mails"][mid] = now
         save_state(state)
         save_json(QUEUE_FILE, queue)
+        save_log(LOG_GITHUB_FILE, events)
         for imap_id, _ in done:
             imap.store(imap_id, "+FLAGS", "\\Seen")
         log(f"{len(done)} mail(s) als verwerkt en gelezen gemarkeerd")

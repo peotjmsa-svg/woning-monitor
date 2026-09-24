@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Woning-monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f2f4f1;
+    --surface: #ffffff;
+    --ink: #1c211f;
+    --muted: #5e6762;
+    --line: #d8ddd7;
+    --accent: #1f5f8b;
+    --accent-ink: #ffffff;
+    --accent-soft: #e3eef6;
+    --brick: #b8502a;
+    --ok: #1d7a4a;
+    --ok-soft: #e1f3e8;
+    --warn: #a86200;
+    --warn-soft: #fcf0dc;
+    --bad: #b3261e;
+    --bad-soft: #fbe6e4;
+    --bar-rest: #c9cfca;
+    --focus: #1f5f8b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #111513;
+      --surface: #1a1f1d;
+      --ink: #e5eae7;
+      --muted: #9ba49f;
+      --line: #2e3633;
+      --accent: #6fb1e0;
+      --accent-ink: #0d1a24;
+      --accent-soft: #16283a;
+      --brick: #e38a64;
+      --ok: #55c98e;
+      --ok-soft: #12301f;
+      --warn: #f0a63d;
+      --warn-soft: #33260f;
+      --bad: #f2786e;
+      --bad-soft: #3a1714;
+      --bar-rest: #3d4642;
+      --focus: #6fb1e0;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 32px; }
+  h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+  h2 { font-size: 16px; margin: 0 0 12px; text-wrap: balance; }
+  h3 { font-size: 14px; margin: 0 0 8px; }
+  p { margin: 0; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+  .num { font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .top { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .brand { display: flex; gap: 12px; align-items: center; }
+  .gable { width: 30px; height: 34px; flex: none; }
+  .gable path { fill: var(--brick); }
+  .gable rect { fill: var(--surface); }
+  .tabs { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 9px; padding: 3px; gap: 2px; }
+  .tabs button { border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600; font-size: 14px; padding: 7px 14px; border-radius: 6px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+  .stack { display: grid; gap: 16px; }
+  .grid-2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .kpis { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .kpi .v { font-size: 26px; font-weight: 700; line-height: 1.2; }
+  .kpi .l { color: var(--muted); font-size: 13px; }
+  .kpi.hl .v { color: var(--ok); }
+
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .seg { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+  .chip { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+  .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.ok { color: var(--ok); background: var(--ok-soft); }
+  .pill.warn { color: var(--warn); background: var(--warn-soft); }
+  .pill.bad { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+  .pill.err { color: var(--bad); background: var(--bad-soft); }
+
+  .chart svg { width: 100%; height: auto; display: block; }
+  .chart text { fill: var(--muted); font-size: 11px; font-family: "Public Sans", system-ui, sans-serif; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+
+  .hbars { display: grid; gap: 7px; }
+  .hbar { display: grid; grid-template-columns: minmax(110px, 38%) 1fr auto; gap: 10px; align-items: center; font-size: 13px; }
+  .hbar .lab { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hbar .track { height: 10px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+  .hbar .fill { height: 100%; background: var(--accent); border-radius: 3px; }
+
+  .tablewrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+  td.reason { color: var(--muted); max-width: 360px; }
+  td.right, th.right { text-align: right; }
+
+  label { font-weight: 600; font-size: 13px; display: block; margin-bottom: 4px; }
+  .hint { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  input[type=text], input[type=number], input[type=url], input[type=password], textarea {
+    width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+    border-radius: 7px; padding: 8px 10px;
+  }
+  textarea { min-height: 170px; resize: vertical; font-size: 14px; }
+  .fields { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .check { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
+  .check input { margin-top: 3px; width: 17px; height: 17px; accent-color: var(--accent); flex: none; }
+  .check span { font-size: 14px; }
+  .check small { display: block; color: var(--muted); font-size: 12px; }
+  .row-area { display: grid; grid-template-columns: 1fr 1.4fr 0.9fr auto; gap: 8px; align-items: end; }
+  .row-area + .row-area { margin-top: 8px; }
+  @media (max-width: 560px) { .row-area { grid-template-columns: 1fr 1fr; } }
+
+  button.btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: 7px; padding: 8px 14px; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+  button.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  button.btn.ghost { background: none; border-color: transparent; color: var(--muted); padding-inline: 8px; }
+  button.btn.danger { color: var(--bad); }
+  button.btn:disabled { opacity: 0.5; cursor: default; }
+
+  .site { display: grid; gap: 10px; }
+  .site + .site { border-top: 1px solid var(--line); padding-top: 14px; margin-top: 14px; }
+  .site-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; }
+  .site-head .name { font-weight: 700; font-size: 15px; }
+  .status { font-size: 13px; }
+  .status.bad { color: var(--bad); }
+
+  .savebar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    background: var(--surface); border-top: 1px solid var(--line);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap;
+  }
+  .savebar .msg { font-size: 14px; }
+  .notice { border-radius: 8px; padding: 10px 12px; font-size: 14px; }
+  .notice.err { background: var(--bad-soft); color: var(--bad); }
+  .notice.ok { background: var(--ok-soft); color: var(--ok); }
+  .notice.info { background: var(--accent-soft); color: var(--ink); }
+  details.token summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+  details.token[open] summary { margin-bottom: 10px; }
+  ol.steps { margin: 0 0 12px; padding-left: 20px; font-size: 14px; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <svg class="gable" viewBox="0 0 30 34" aria-hidden="true">
+        <path d="M15 0 L20 5 L20 8 L25 8 L25 13 L30 13 L30 34 L0 34 L0 13 L5 13 L5 8 L10 8 L10 5 Z"/>
+        <rect x="8" y="17" width="5" height="6" rx="0.5"/><rect x="17" y="17" width="5" height="6" rx="0.5"/>
+        <rect x="12" y="26" width="6" height="8" rx="0.5"/>
+      </svg>
+      <div>
+        <h1>Woning-monitor</h1>
+        <p class="muted small" id="updated">Gegevens laden…</p>
+      </div>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Onderdelen">
+      <button role="tab" id="tab-overview" aria-selected="true" aria-controls="view-overview">Overzicht</button>
+      <button role="tab" id="tab-filters" aria-selected="false" aria-controls="view-filters">Filters</button>
+      <button role="tab" id="tab-sites" aria-selected="false" aria-controls="view-sites">Sites</button>
+    </div>
+  </div>
+
+  <div id="load-error" class="notice err" hidden></div>
+
+  <!-- OVERZICHT -->
+  <section id="view-overview" role="tabpanel" aria-labelledby="tab-overview" class="stack">
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Periode">
+        <button class="chip" data-days="1">24 uur</button>
+        <button class="chip" data-days="7" aria-pressed="true">7 dagen</button>
+        <button class="chip" data-days="30">30 dagen</button>
+        <button class="chip" data-days="90">90 dagen</button>
+      </div>
+      <button class="btn ghost" id="reload">Vernieuwen</button>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="panel chart">
+      <h2>Woningen per dag</h2>
+      <div id="perday"></div>
+      <div class="legend"><span><i style="background:var(--ok)"></i>gemaild (gecontroleerd)</span><span><i style="background:var(--warn)"></i>gemaild (niet gecontroleerd) of wachtlijst</span><span><i style="background:var(--bar-rest)"></i>afgewezen</span></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel"><h2>Waarom afgewezen</h2><div class="hbars" id="reasons"></div></div>
+      <div class="panel"><h2>Per gebied</h2><div class="hbars" id="areas"></div></div>
+      <div class="panel"><h2>Huurprijs</h2><div class="hbars" id="prices"></div></div>
+      <div class="panel"><h2>Per bron</h2><div class="hbars" id="sources"></div></div>
+    </div>
+    <div class="panel">
+      <div class="toolbar">
+        <h2 style="margin:0">Woningen</h2>
+        <div class="seg" role="group" aria-label="Toon">
+          <button class="chip" data-show="all" aria-pressed="true">Alle</button>
+          <button class="chip" data-show="mailed">Gemaild</button>
+          <button class="chip" data-show="queue">Wachtlijst</button>
+          <button class="chip" data-show="rejected">Afgewezen</button>
+        </div>
+      </div>
+      <input type="text" id="search" placeholder="Zoek op straat, postcode of reden" aria-label="Zoek in woningen">
+      <div class="tablewrap" style="margin-top:10px">
+        <table>
+          <thead><tr><th>Wanneer</th><th>Woning</th><th class="right">Prijs</th><th class="right">Kamers</th><th>Gebied</th><th>Bron</th><th>Status</th><th>Reden</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="hint" id="rows-note"></p>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <section id="view-filters" role="tabpanel" aria-labelledby="tab-filters" class="stack" hidden>
+    <div class="panel">
+      <h2>Budget en grootte</h2>
+      <div class="fields">
+        <div><label for="max_price">Max huur per maand (€)</label><input type="number" id="max_price" min="1" step="50" inputmode="numeric"></div>
+        <div><label for="min_rooms">Min. aantal kamers</label><input type="number" id="min_rooms" min="1" step="1" inputmode="numeric"><p class="hint">Totaal, inclusief woonkamer.</p></div>
+        <div><label for="income_reject_above">Afwijzen boven inkomenseis (€/jaar)</label><input type="number" id="income_reject_above" min="0" step="1000" placeholder="leeg = alleen tonen" inputmode="numeric"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Gebieden binnen de ring</h2>
+      <p class="muted small" style="margin-bottom:12px">Op basis van de eerste 4 cijfers van de postcode. Alles wat hier niet in staat geldt als buiten de ring. Met "max €/kamer" mag een gebied alleen bij een goede deal.</p>
+      <div id="area-rows"></div>
+      <button class="btn" id="add-area" style="margin-top:10px">Gebied toevoegen</button>
+      <div class="check" style="margin-top:10px"><input type="checkbox" id="include_unknown_postcode"><span>Woningen zonder gevonden postcode toch doorsturen<small>Met een waarschuwing, zodat je zelf de locatie checkt.</small></span></div>
+    </div>
+    <div class="panel">
+      <h2>Afwijzen op de advertentietekst</h2>
+      <div class="check"><input type="checkbox" id="rej_no_students"><span>Geen studenten<small>"niet verhuurd aan studenten", "no students"</small></span></div>
+      <div class="check"><input type="checkbox" id="rej_no_guarantor"><span>Geen garantsteller<small>"garantstelling niet geaccepteerd"</small></span></div>
+      <div class="check"><input type="checkbox" id="rej_no_sharing"><span>Geen woningdelers<small>"geen woningdelers", "not suitable for sharing"</small></span></div>
+      <div class="check"><input type="checkbox" id="rej_swap"><span>Woningruil<small>Alleen zinvol als je zelf een huurwoning hebt om te ruilen</small></span></div>
+    </div>
+    <div class="panel">
+      <h2>Criteria voor Claude</h2>
+      <label for="criteria_text">Deze tekst krijgt Claude letterlijk bij elke beoordeling</label>
+      <textarea id="criteria_text"></textarea>
+    </div>
+    <div class="panel">
+      <h2>Timing</h2>
+      <div class="fields">
+        <div><label for="fallback_minutes">Wachttijd voor ongecontroleerde mail (min)</label><input type="number" id="fallback_minutes" min="0" step="5" inputmode="numeric"><p class="hint">Zo lang wacht GitHub op controle door je pc voordat hij een kandidaat toch mailt.</p></div>
+        <div><label for="max_detail">Advertenties per run op de pc</label><input type="number" id="max_detail" min="1" step="1" inputmode="numeric"><p class="hint">De rest volgt het volgende kwartier.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SITES -->
+  <section id="view-sites" role="tabpanel" aria-labelledby="tab-sites" class="stack" hidden>
+    <div class="panel">
+      <h2>Zoekpagina's voor de pc thuis</h2>
+      <p class="muted small" style="margin-bottom:14px">Alleen pagina 1 wordt gelezen: zet de zoekpagina op "nieuwste eerst". Pararius en Huurwoningen hebben vaste code; bij andere sites leest Claude de advertentie (één aanroep per nieuwe advertentie).</p>
+      <div id="site-list"></div>
+    </div>
+    <div class="panel">
+      <h2>Site toevoegen</h2>
+      <div class="fields">
+        <div><label for="new-name">Naam</label><input type="text" id="new-name" placeholder="bv. Kamernet"></div>
+        <div><label for="new-contains">Advertentielinks bevatten</label><input type="text" id="new-contains" placeholder="bv. /huren/amsterdam/"><p class="hint">Stukje van de link dat in elke advertentie staat. Open een advertentie en kijk naar het adres: bij <span class="num">site.nl/huren/amsterdam/123-straat</span> is dat <span class="num">/huren/amsterdam/</span>.</p></div>
+      </div>
+      <div style="margin-top:14px"><label for="new-url">Zoek-URL (met je filters, nieuwste eerst)</label><input type="url" id="new-url" placeholder="https://…"></div>
+      <div style="margin-top:14px"><button class="btn" id="add-site">Toevoegen</button> <span id="add-site-msg" class="small"></span></div>
+    </div>
+    <div class="panel">
+      <h2>Alert-mails (GitHub)</h2>
+      <label for="alert_senders">Afzenders, komma-gescheiden</label>
+      <input type="text" id="alert_senders">
+      <p class="hint">Een stukje van het afzenderadres, bv. <span class="num">funda</span>. Stel op die site een alert in naar je alert-Gmail; Claude leest de mail uit.</p>
+    </div>
+  </section>
+
+  <div class="panel" style="margin-top:16px">
+    <details class="token" id="token-box">
+      <summary>GitHub-koppeling</summary>
+      <p class="muted small" style="margin-bottom:10px">Kijken kan zonder, voor opslaan is een token nodig. Het token blijft alleen in deze browser.</p>
+      <ol class="steps">
+        <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com → nieuw fine-grained token</a></li>
+        <li>Repository access: <b>Only select repositories</b> → <span class="num">woning-monitor</span></li>
+        <li>Permissions → Repository → <b>Contents: Read and write</b></li>
+        <li>Generate token en plak hem hieronder</li>
+      </ol>
+      <div class="fields">
+        <div><label for="token">Token</label><input type="password" id="token" autocomplete="off" placeholder="github_pat_…"></div>
+        <div><label for="repo">Repository</label><input type="text" id="repo"></div>
+      </div>
+      <div style="margin-top:10px"><button class="btn" id="save-token">Koppelen</button> <span id="token-msg" class="small"></span></div>
+    </details>
+  </div>
+</div>
+
+<div class="savebar" id="savebar" hidden>
+  <span class="msg" id="save-msg">Niet-opgeslagen wijzigingen</span>
+  <button class="btn" id="discard">Ongedaan maken</button>
+  <button class="btn primary" id="save">Opslaan</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  const DEFAULT_REPO = "peotjmsa-svg/woning-monitor";
+  const PATHS = {
+    settings: "housing_monitor/settings.json",
+    logGithub: "housing_monitor/log_github.json",
+    logHome: "housing_monitor/log_home.json",
+    queue: "housing_monitor/queue.json",
+  };
+  const $ = (id) => document.getElementById(id);
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* alleen gemak */ } },
+  };
+  const state = { settings: null, saved: null, sha: null, entries: [], sites: {}, queue: [], days: 7, show: "all", updated: {} };
+
+  const repo = () => store.get("wm-repo") || DEFAULT_REPO;
+  const token = () => store.get("wm-token") || "";
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const euro = (n) => n == null ? "?" : "€" + Number(n).toLocaleString("nl-NL");
+
+  // ---------------------------------------------------------------- GitHub
+  function b64encode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = "";
+    bytes.forEach((b) => { bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  function b64decode(b64) {
+    const bin = atob(b64.replace(/\n/g, ""));
+    return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)));
+  }
+  async function getFile(path) {
+    if (token()) {
+      const r = await fetch(`https://api.github.com/repos/${repo()}/contents/${path}?ref=main&t=${Date.now()}`,
+        { headers: { Authorization: `Bearer ${token()}`, Accept: "application/vnd.github+json" }, cache: "no-store" });
+      if (r.status === 404) return { data: null, sha: null };
+      if (!r.ok) throw new Error(`${path}: GitHub gaf ${r.status}${r.status === 401 ? " (token ongeldig of verlopen)" : ""}`);
+      const j = await r.json();
+      const text = j.content ? b64decode(j.content) : await (await fetch(j.download_url, { cache: "no-store" })).text();
+      return { data: JSON.parse(text), sha: j.sha };
+    }
+    const r = await fetch(`https://raw.githubusercontent.com/${repo()}/main/${path}?t=${Date.now()}`, { cache: "no-store" });
+    if (r.status === 404) return { data: null, sha: null };
+    if (!r.ok) throw new Error(`${path}: ${r.status}`);
+    return { data: await r.json(), sha: null };
+  }
+  async function putSettings(obj) {
+    const body = { message: "Instellingen aangepast via de webapp", content: b64encode(JSON.stringify(obj, null, 2) + "\n"), branch: "main" };
+    if (state.sha) body.sha = state.sha;
+    const r = await fetch(`https://api.github.com/repos/${repo()}/contents/${PATHS.settings}`, {
+      method: "PUT",
+      headers: { Authorization: `Bearer ${token()}`, Accept: "application/vnd.github+json", "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (r.status === 409 || r.status === 422) throw new Error("De instellingen zijn intussen elders aangepast. Vernieuw de pagina en probeer het opnieuw.");
+    if (r.status === 401 || r.status === 403) throw new Error("Het token mag niet schrijven. Geef het Contents: Read and write op deze repository.");
+    if (!r.ok) throw new Error(`Opslaan mislukt (GitHub gaf ${r.status}).`);
+    const j = await r.json();
+    state.sha = j.content.sha;
+  }
+
+  // ---------------------------------------------------------------- laden
+  async function loadAll() {
+    $("load-error").hidden = true;
+    try {
+      const [s, lg, lh, q] = await Promise.all([getFile(PATHS.settings), getFile(PATHS.logGithub), getFile(PATHS.logHome), getFile(PATHS.queue)]);
+      if (!s.data) throw new Error("housing_monitor/settings.json staat nog niet in de repository.");
+      state.settings = s.data;
+      state.saved = JSON.stringify(s.data);
+      state.sha = s.sha;
+      state.entries = [...((lg.data && lg.data.entries) || []), ...((lh.data && lh.data.entries) || [])];
+      state.sites = (lh.data && lh.data.sites) || {};
+      state.queue = (q.data && q.data.items) || [];
+      state.updated = { github: lg.data && lg.data.updated, home: lh.data && lh.data.updated };
+      fillForms();
+      renderOverview();
+      renderSites();
+      const fmt = (t) => t ? new Date(t).toLocaleString("nl-NL", { dateStyle: "short", timeStyle: "short" }) : "nog niet";
+      $("updated").textContent = `GitHub: ${fmt(state.updated.github)} · pc thuis: ${fmt(state.updated.home)}`;
+    } catch (e) {
+      $("load-error").textContent = "Laden mislukt: " + e.message;
+      $("load-error").hidden = false;
+    }
+  }
+
+  // ---------------------------------------------------------------- overzicht
+  const RESULT = {
+    "gemaild": { cls: "ok", label: "gemaild", group: "mailed" },
+    "gemaild (niet gecontroleerd)": { cls: "warn", label: "gemaild, niet gecontroleerd", group: "mailed" },
+    "wachtlijst": { cls: "warn", label: "wachtlijst", group: "queue" },
+    "afgewezen": { cls: "bad", label: "afgewezen", group: "rejected" },
+  };
+  function listingKey(e) {
+    const who = (e.postcode || (e.name || "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 24));
+    return who + "|" + (e.price || "?");
+  }
+  // Laatste status per woning: een wachtlijst-regel van GitHub wordt later overschreven
+  // door het oordeel van de pc thuis.
+  function latestPerListing(entries) {
+    const map = new Map();
+    entries.slice().sort((a, b) => a.t.localeCompare(b.t)).forEach((e) => {
+      const k = listingKey(e);
+      const prev = map.get(k);
+      map.set(k, Object.assign({ first: prev ? prev.first : e.t, sources: new Set(prev ? prev.sources : []) }, e));
+      map.get(k).sources.add(e.site || e.source);
+    });
+    return [...map.values()];
+  }
+  function inPeriod(list) {
+    const cutoff = new Date(Date.now() - state.days * 864e5).toISOString();
+    return list.filter((e) => e.first >= cutoff);
+  }
+  function hbars(el, pairs, total, fmtLabel) {
+    const max = Math.max(1, ...pairs.map((p) => p[1]));
+    el.innerHTML = pairs.length ? pairs.map(([lab, n]) =>
+      `<div class="hbar"><span class="lab" title="${esc(lab)}">${esc(fmtLabel ? fmtLabel(lab) : lab)}</span>` +
+      `<span class="track"><span class="fill" style="width:${(100 * n / max).toFixed(1)}%;display:block"></span></span>` +
+      `<span class="num">${n}</span></div>`).join("") : `<p class="muted small">Nog geen gegevens in deze periode.</p>`;
+  }
+  function count(list, fn) {
+    const m = new Map();
+    list.forEach((e) => { const k = fn(e); if (k != null) m.set(k, (m.get(k) || 0) + 1); });
+    return [...m.entries()].sort((a, b) => b[1] - a[1]);
+  }
+  function reasonGroup(e) {
+    if (e.stage && e.stage.startsWith("Claude")) return ["Claude: geen match"];
+    return (e.reason || "onbekend").split(", ").map((r) => r.replace(/\s*\(.*\)$/, "").trim());
+  }
+  function renderOverview() {
+    const all = latestPerListing(state.entries);
+    const list = inPeriod(all);
+    const status = (e) => (RESULT[e.result] || { group: "rejected" }).group;
+    const mailed = list.filter((e) => status(e) === "mailed");
+    const checked = list.filter((e) => e.result === "gemaild").length;
+    $("kpis").innerHTML = [
+      ["Nieuwe woningen gezien", list.length, ""],
+      ["Gemaild", mailed.length, "hl"],
+      ["Daarvan gecontroleerd", checked, ""],
+      ["Nu op de wachtlijst", state.queue.length, ""],
+    ].map(([l, v, c]) => `<div class="kpi ${c}"><div class="v num">${v}</div><div class="l">${l}</div></div>`).join("");
+
+    // per dag
+    const days = Math.min(state.days, 30) < 2 ? 2 : Math.min(state.days, 30);
+    const buckets = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(Date.now() - i * 864e5);
+      buckets.push({ key: d.toISOString().slice(0, 10), label: d.toLocaleDateString("nl-NL", { day: "numeric", month: "short" }), ok: 0, warn: 0, rest: 0 });
+    }
+    const idx = new Map(buckets.map((b, i) => [b.key, i]));
+    all.forEach((e) => {
+      const i = idx.get(e.first.slice(0, 10));
+      if (i == null) return;
+      if (e.result === "gemaild") buckets[i].ok++;
+      else if (status(e) === "mailed" || status(e) === "queue") buckets[i].warn++;
+      else buckets[i].rest++;
+    });
+    const W = 720, H = 190, pad = { l: 28, r: 8, t: 10, b: 26 };
+    const maxV = Math.max(4, ...buckets.map((b) => b.ok + b.warn + b.rest));
+    const step = Math.pow(10, Math.floor(Math.log10(maxV))) * (maxV / Math.pow(10, Math.floor(Math.log10(maxV))) > 5 ? 2 : 1);
+    const top = Math.ceil(maxV / step) * step;
+    const y = (v) => pad.t + (H - pad.t - pad.b) * (1 - v / top);
+    const bw = (W - pad.l - pad.r) / buckets.length;
+    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Aantal nieuwe woningen per dag, verdeeld in gemaild en afgewezen">`;
+    for (let v = 0; v <= top; v += step) {
+      svg += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>` +
+             `<text x="${pad.l - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+    }
+    const labelEvery = Math.ceil(buckets.length / 10);
+    buckets.forEach((b, i) => {
+      const x = pad.l + i * bw + bw * 0.18, w = bw * 0.64;
+      let base = 0;
+      [["ok", "var(--ok)"], ["warn", "var(--warn)"], ["rest", "var(--bar-rest)"]].forEach(([k, col]) => {
+        if (!b[k]) return;
+        svg += `<rect x="${x.toFixed(1)}" y="${y(base + b[k]).toFixed(1)}" width="${w.toFixed(1)}" height="${(y(base) - y(base + b[k])).toFixed(1)}" fill="${col}"><title>${b.label}: ${b[k]}</title></rect>`;
+        base += b[k];
+      });
+      if (i % labelEvery === 0 || i === buckets.length - 1) svg += `<text x="${(x + w / 2).toFixed(1)}" y="${H - 8}" text-anchor="middle">${b.label}</text>`;
+    });
+    $("perday").innerHTML = svg + "</svg>";
+
+    const rejected = list.filter((e) => status(e) === "rejected");
+    const reasons = new Map();
+    rejected.forEach((e) => reasonGroup(e).forEach((r) => reasons.set(r, (reasons.get(r) || 0) + 1)));
+    hbars($("reasons"), [...reasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8));
+    hbars($("areas"), count(list, (e) => e.area || "onbekend"));
+    const bucket = (p) => p == null ? null : p >= 3500 ? "€3.500+" : `€${(Math.floor(p / 500) * 500).toLocaleString("nl-NL")}–${(Math.floor(p / 500) * 500 + 499).toLocaleString("nl-NL")}`;
+    hbars($("prices"), count(list, (e) => bucket(e.price)).sort((a, b) => a[0].localeCompare(b[0], "nl", { numeric: true })));
+    hbars($("sources"), count(list, (e) => `${e.site || "?"} · ${e.source === "mail" ? "alert-mail" : e.source === "wachtlijst" ? "mail → pc" : "scraper"}`));
+    renderRows(list);
+  }
+  function renderRows(list) {
+    const q = ($("search").value || "").toLowerCase();
+    const rows = list
+      .filter((e) => state.show === "all" || (RESULT[e.result] || { group: "rejected" }).group === state.show)
+      .filter((e) => !q || [e.name, e.postcode, e.reason, e.area, e.site].join(" ").toLowerCase().includes(q))
+      .sort((a, b) => b.t.localeCompare(a.t));
+    $("rows").innerHTML = rows.slice(0, 200).map((e) => {
+      const r = RESULT[e.result] || { cls: "bad", label: e.result };
+      const when = new Date(e.t).toLocaleString("nl-NL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      const name = e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.name)}</a>` : esc(e.name);
+      return `<tr><td class="num">${esc(when)}</td><td>${name}</td><td class="right num">${euro(e.price)}</td><td class="right num">${e.rooms == null ? "?" : e.rooms}</td>` +
+             `<td>${esc(e.area || "?")}</td><td>${esc(e.site || e.source)}</td><td><span class="pill ${r.cls}">${esc(r.label)}</span></td><td class="reason">${esc(e.reason)}</td></tr>`;
+    }).join("") || `<tr><td colspan="8" class="muted">Geen woningen voor deze selectie.</td></tr>`;
+    $("rows-note").textContent = rows.length > 200 ? `De nieuwste 200 van ${rows.length} getoond.` : "";
+  }
+
+  // ---------------------------------------------------------------- formulieren
+  function areaRow(name, ranges, perRoom) {
+    const div = document.createElement("div");
+    div.className = "row-area";
+    const n = document.querySelectorAll(".row-area").length;
+    div.innerHTML =
+      `<div><label for="an${n}">Gebied</label><input type="text" id="an${n}" class="a-name" value="${esc(name)}"></div>` +
+      `<div><label for="ar${n}">Postcodes</label><input type="text" id="ar${n}" class="a-ranges" value="${esc(ranges)}" placeholder="1011-1018, 1019"></div>` +
+      `<div><label for="ap${n}">Max €/kamer</label><input type="number" id="ap${n}" class="a-room" value="${perRoom == null ? "" : perRoom}" placeholder="geen" inputmode="numeric"></div>` +
+      `<div><button class="btn ghost danger a-del" type="button" aria-label="Gebied verwijderen">Verwijderen</button></div>`;
+    div.querySelector(".a-del").addEventListener("click", () => { div.remove(); onChange(); });
+    div.querySelectorAll("input").forEach((i) => i.addEventListener("input", onChange));
+    return div;
+  }
+  function fillForms() {
+    const s = state.settings;
+    $("max_price").value = s.max_price;
+    $("min_rooms").value = s.min_rooms;
+    $("income_reject_above").value = s.income_reject_above == null ? "" : s.income_reject_above;
+    $("include_unknown_postcode").checked = !!s.include_unknown_postcode;
+    $("rej_no_students").checked = !!s.reject.no_students;
+    $("rej_no_guarantor").checked = !!s.reject.no_guarantor;
+    $("rej_no_sharing").checked = !!s.reject.no_sharing;
+    $("rej_swap").checked = !!s.reject.swap;
+    $("criteria_text").value = s.criteria_text;
+    $("fallback_minutes").value = s.fallback_minutes;
+    $("max_detail").value = s.max_detail_fetches_per_run;
+    $("alert_senders").value = (s.alert_senders || []).join(", ");
+    const wrap = $("area-rows");
+    wrap.innerHTML = "";
+    Object.entries(s.areas).forEach(([name, ranges]) => {
+      const txt = ranges.map(([a, b]) => a === b ? `${a}` : `${a}-${b}`).join(", ");
+      wrap.appendChild(areaRow(name, txt, (s.area_max_price_per_room || {})[name]));
+    });
+    updateSavebar();
+  }
+  function readForms() {
+    const s = JSON.parse(JSON.stringify(current()));   // behoudt niet-opgeslagen site-wijzigingen
+    const int = (id) => { const v = $(id).value.trim(); return v === "" ? null : Number(v); };
+    s.max_price = int("max_price");
+    s.min_rooms = int("min_rooms");
+    s.income_reject_above = int("income_reject_above");
+    s.include_unknown_postcode = $("include_unknown_postcode").checked;
+    s.reject = { no_students: $("rej_no_students").checked, no_guarantor: $("rej_no_guarantor").checked, no_sharing: $("rej_no_sharing").checked, swap: $("rej_swap").checked };
+    s.criteria_text = $("criteria_text").value;
+    s.fallback_minutes = int("fallback_minutes");
+    s.max_detail_fetches_per_run = int("max_detail");
+    s.alert_senders = $("alert_senders").value.split(",").map((x) => x.trim()).filter(Boolean);
+    s.areas = {};
+    s.area_max_price_per_room = {};
+    document.querySelectorAll(".row-area").forEach((row) => {
+      const name = row.querySelector(".a-name").value.trim();
+      if (!name) return;
+      s.areas[name] = row.querySelector(".a-ranges").value.split(",").map((x) => x.trim()).filter(Boolean).map((part) => {
+        const m = part.match(/^(\d{4})\s*(?:-\s*(\d{4}))?$/);
+        return m ? [Number(m[1]), Number(m[2] || m[1])] : [NaN, NaN];
+      });
+      const pr = row.querySelector(".a-room").value.trim();
+      if (pr !== "") s.area_max_price_per_room[name] = Number(pr);
+    });
+    return s;
+  }
+  function validate(s) {
+    const errs = [];
+    if (!(s.max_price > 0)) errs.push("Max huur moet een bedrag groter dan 0 zijn.");
+    if (!(Number.isInteger(s.min_rooms) && s.min_rooms >= 1)) errs.push("Min. aantal kamers moet een heel getal van 1 of meer zijn.");
+    if (s.income_reject_above != null && !(s.income_reject_above > 0)) errs.push("De inkomensgrens moet leeg zijn of groter dan 0.");
+    Object.entries(s.areas).forEach(([n, rs]) => {
+      if (!rs.length) errs.push(`Gebied ${n}: vul postcodes in, bv. 1011-1018.`);
+      rs.forEach(([a, b]) => { if (!(a >= 1000 && a <= b && b <= 1199)) errs.push(`Gebied ${n}: gebruik postcodes als 1011-1018 (tussen 1000 en 1199).`); });
+    });
+    Object.entries(s.area_max_price_per_room).forEach(([n, v]) => { if (!(v > 0)) errs.push(`Gebied ${n}: max €/kamer moet leeg zijn of groter dan 0.`); });
+    if (!s.criteria_text.trim()) errs.push("De criteria voor Claude mogen niet leeg zijn.");
+    if (!(Number.isInteger(s.fallback_minutes) && s.fallback_minutes >= 0)) errs.push("De wachttijd moet een heel aantal minuten zijn.");
+    if (!(Number.isInteger(s.max_detail_fetches_per_run) && s.max_detail_fetches_per_run >= 1)) errs.push("Advertenties per run moet 1 of meer zijn.");
+    s.sites.forEach((site) => {
+      if (!/^https?:\/\//.test(site.search_url || "")) errs.push(`${site.name}: de zoek-URL moet met https:// beginnen.`);
+      if (site.type === "generic" && !(site.link_contains || "").trim()) errs.push(`${site.name}: vul in wat er in de advertentielinks staat.`);
+    });
+    if (!s.alert_senders.length) errs.push("Vul minstens één afzender voor alert-mails in.");
+    return errs;
+  }
+  function onChange() {
+    if (!state.settings) return;
+    const s = readForms();
+    // sites worden direct in state.settings bijgewerkt (renderSites)
+    state.pending = s;
+    updateSavebar();
+  }
+  function current() { return state.pending || state.settings; }
+  function editable() {
+    if (!state.pending) state.pending = JSON.parse(JSON.stringify(state.settings));
+    return state.pending;
+  }
+  function updateSavebar() {
+    const dirty = state.settings && JSON.stringify(current()) !== state.saved;
+    $("savebar").hidden = !dirty;
+    if (dirty) { $("save-msg").textContent = "Niet-opgeslagen wijzigingen"; $("save").disabled = false; }
+  }
+
+  // ---------------------------------------------------------------- sites
+  function renderSites() {
+    const s = current();
+    const list = $("site-list");
+    list.innerHTML = "";
+    s.sites.forEach((site, i) => {
+      const st = state.sites[site.name];
+      const when = st && new Date(st.t).toLocaleString("nl-NL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      const status = !st ? `<span class="status muted">Nog niet gecontroleerd door de pc</span>`
+        : st.ok ? `<span class="status muted">${esc(when)}: ${st.found} advertenties, ${st.new == null ? "?" : st.new} nieuw</span>`
+        : `<span class="status bad">${esc(when)}: ${esc(st.error || "mislukt")}</span>`;
+      const div = document.createElement("div");
+      div.className = "site";
+      div.innerHTML =
+        `<div class="site-head"><div><span class="name">${esc(site.name)}</span> <span class="pill ${site.type === "builtin" ? "ok" : "warn"}">${site.type === "builtin" ? "vaste code" : "Claude leest"}</span></div>` +
+        `<div class="check" style="padding:0"><input type="checkbox" id="en${i}" ${site.enabled !== false ? "checked" : ""}><span><label for="en${i}" style="display:inline;margin:0">Actief</label></span></div></div>` +
+        status +
+        `<div><label for="su${i}">Zoek-URL</label><input type="url" id="su${i}" value="${esc(site.search_url)}"></div>` +
+        (site.type === "generic" ? `<div><label for="lc${i}">Advertentielinks bevatten</label><input type="text" id="lc${i}" value="${esc(site.link_contains || "")}"></div>` : "") +
+        (site.type === "generic" ? `<div><button class="btn ghost danger" type="button" id="del${i}">Site verwijderen</button></div>` : "");
+      list.appendChild(div);
+      const upd = () => {
+        const target = editable().sites[i];
+        target.enabled = $(`en${i}`).checked;
+        target.search_url = $(`su${i}`).value.trim();
+        if (site.type === "generic") target.link_contains = $(`lc${i}`).value.trim();
+        updateSavebar();
+      };
+      [`en${i}`, `su${i}`, `lc${i}`].forEach((id) => $(id) && $(id).addEventListener("input", upd));
+      if ($(`del${i}`)) $(`del${i}`).addEventListener("click", () => { editable().sites.splice(i, 1); renderSites(); updateSavebar(); });
+    });
+  }
+  $("add-site").addEventListener("click", () => {
+    const name = $("new-name").value.trim(), url = $("new-url").value.trim(), contains = $("new-contains").value.trim();
+    const msg = $("add-site-msg");
+    if (!name || !/^https?:\/\//.test(url) || !contains) { msg.textContent = "Vul een naam, een zoek-URL die met https:// begint en het linkstukje in."; msg.style.color = "var(--bad)"; return; }
+    state.pending = readForms();
+    if (state.pending.sites.some((s) => s.name.toLowerCase() === name.toLowerCase())) { msg.textContent = "Er is al een site met die naam."; msg.style.color = "var(--bad)"; return; }
+    state.pending.sites.push({ name, type: "generic", enabled: true, search_url: url, link_contains: contains });
+    ["new-name", "new-url", "new-contains"].forEach((id) => { $(id).value = ""; });
+    msg.textContent = `${name} toegevoegd. Klik onderaan op Opslaan.`;
+    msg.style.color = "var(--ok)";
+    renderSites();
+    updateSavebar();
+  });
+
+  // ---------------------------------------------------------------- opslaan
+  $("save").addEventListener("click", async () => {
+    const s = readForms();
+    s.sites = current().sites;
+    const errs = validate(s);
+    if (errs.length) { $("save-msg").textContent = errs[0]; return; }
+    if (!token()) {
+      $("save-msg").textContent = "Koppel eerst GitHub (onderaan de pagina).";
+      $("token-box").open = true;
+      $("token").focus();
+      return;
+    }
+    $("save").disabled = true;
+    $("save-msg").textContent = "Opslaan…";
+    try {
+      await putSettings(s);
+      state.settings = s;
+      state.saved = JSON.stringify(s);
+      state.pending = null;
+      $("save-msg").textContent = "Opgeslagen. Geldt vanaf de volgende run (binnen een kwartier).";
+      setTimeout(updateSavebar, 2500);
+    } catch (e) {
+      $("save-msg").textContent = e.message;
+      $("save").disabled = false;
+    }
+  });
+  $("discard").addEventListener("click", () => {
+    state.pending = null;
+    state.settings = JSON.parse(state.saved);
+    fillForms();
+    renderSites();
+  });
+
+  // ---------------------------------------------------------------- UI
+  document.querySelectorAll('[role="tab"]').forEach((tab) => tab.addEventListener("click", () => {
+    document.querySelectorAll('[role="tab"]').forEach((t) => {
+      const on = t === tab;
+      t.setAttribute("aria-selected", on);
+      $(t.getAttribute("aria-controls")).hidden = !on;
+    });
+    store.set("wm-tab", tab.id);
+  }));
+  document.querySelectorAll("[data-days]").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll("[data-days]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    state.days = Number(b.dataset.days);
+    renderOverview();
+  }));
+  document.querySelectorAll("[data-show]").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll("[data-show]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    state.show = b.dataset.show;
+    renderRows(inPeriod(latestPerListing(state.entries)));
+  }));
+  $("search").addEventListener("input", () => renderRows(inPeriod(latestPerListing(state.entries))));
+  $("reload").addEventListener("click", loadAll);
+  document.querySelectorAll("#view-filters input, #view-filters textarea, #alert_senders").forEach((el) => el.addEventListener("input", onChange));
+  $("add-area").addEventListener("click", () => { $("area-rows").appendChild(areaRow("", "", null)); onChange(); });
+
+  $("repo").value = repo();
+  $("token").value = token();
+  if (!token()) $("token-box").open = false;
+  $("save-token").addEventListener("click", async () => {
+    store.set("wm-token", $("token").value.trim());
+    store.set("wm-repo", $("repo").value.trim() || DEFAULT_REPO);
+    $("token-msg").textContent = "Controleren…";
+    try {
+      const r = await fetch(`https://api.github.com/repos/${repo()}`, { headers: { Authorization: `Bearer ${token()}` } });
+      const j = await r.json();
+      $("token-msg").textContent = r.ok && j.permissions && j.permissions.push ? "Gekoppeld, je kunt opslaan." : "Token werkt niet of mag niet schrijven.";
+      $("token-msg").style.color = r.ok && j.permissions && j.permissions.push ? "var(--ok)" : "var(--bad)";
+      if (r.ok) loadAll();
+    } catch (e) {
+      $("token-msg").textContent = "Controleren mislukt: " + e.message;
+    }
+  });
+  const lastTab = store.get("wm-tab");
+  if (lastTab && $(lastTab)) $(lastTab).click();
+  loadAll();
+})();
+</script>
+</body>
+</html>
