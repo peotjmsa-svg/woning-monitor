@@ -192,6 +192,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:22:45.670638+00:00"
   },
+  "bd5b50f1": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:30:00.922004+00:00"
+  },
   "bfb99d0b": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
@@ -392,6 +396,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
   },
+  "pc:1087BB:2060": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:30:00.922004+00:00"
+  },
   "pc:1087EK:1120": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
@@ -479,6 +487,10 @@
   "url:www.huurwoningen.nl/huren/amsterdam/bc85fb89/marius-meijboomstraat": {
    "result": "afgewezen",
    "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/bd5b50f1/cas-oorthuyskade": {
+   "result": "al gezien",
+   "t": "2026-09-24T19:30:00.922004+00:00"
   },
   "url:www.huurwoningen.nl/huren/amsterdam/e2efb18a/klipperstraat": {
    "result": "afgewezen",
