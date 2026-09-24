@@ -248,6 +248,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
   },
+  "pc:1016XP:1815": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
   "pc:1018HS:2950": {
    "result": "al gezien",
    "t": "2026-09-24T19:07:45.603792+00:00"
@@ -255,6 +259,10 @@
   "pc:1018KZ:3000": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "pc:1018TN:2265": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
   },
   "pc:1019AZ:2650": {
    "result": "afgewezen",
@@ -284,6 +292,22 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "pc:1032LB:1527": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "pc:1033SC:1877": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "pc:1033SC:1989": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "pc:1033SN:2566": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
   "pc:1034DC:680": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
@@ -295,6 +319,10 @@
   "pc:1035XV:715": {
    "result": "afgewezen",
    "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "pc:1043CH:1302": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
   },
   "pc:1053KX:2975": {
    "result": "afgewezen",
@@ -396,9 +424,17 @@
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
   },
+  "pc:1082MT:2400": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
   "pc:1087BB:2060": {
    "result": "al gezien",
    "t": "2026-09-24T19:30:00.922004+00:00"
+  },
+  "pc:1087BC:1138": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
   },
   "pc:1087EK:1120": {
    "result": "afgewezen",
@@ -428,6 +464,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "pc:1095MS:1777": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
   "pc:1096HL:3000": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
@@ -455,6 +495,46 @@
   "pc:1106EJ:2050": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1016xp-160-nieuwe-passeerdersstraat-36ae7f915dd1e413319763bc615060b6": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1018tn-99-f5-plantage-muidergracht-c4b535784a0c6ce1bf45c4fbb432498f": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1032lb-60-hulstweg-190d0485800f082a139bc53a008a3995": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1033sc-40-g3-tt-vasumweg-bde7c24c098a9477a3a826b4714c6ef3": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1033sc-40-p5-tt-vasumweg-03ce062f4db5900aed08b087082a7dbb": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1033sn-14-s11-mt-lincolnweg-ba4cc629ecf363b20dd63486d74dbf2d": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1043ch-192-heathrowstraat-dbb43668abc903f17feca05e3de03326": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1082mt-506-george-gershwinlaan-88e579b2cfa560d413ddbaab0d36f0ec": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1087bc-81-g-johan-van-der-keukenstraat-705dcda1d5f63e536ea7ad0ef9a0cdf0": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "url:ikwilhuren.nu/object/amsterdam-1095ms-76-kees-broekmanstraat-730039cd0b5d4dd24e9fcef4f8d3d244": {
+   "result": "afgewezen",
+   "t": "2026-09-24T20:37:45.891954+00:00"
   },
   "url:www.huurwoningen.nl/huren/amsterdam/2effc3b5/dorus-rijkershof": {
    "result": "afgewezen",
