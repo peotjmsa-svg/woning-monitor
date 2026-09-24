@@ -126,6 +126,14 @@ def fallback_key(listing):
     return f"addr:{addr}:{listing.get('price_eur') or '?'}" if addr else None
 
 
+def postcode_key(listing):
+    """Postcode + prijs: robuuster dan het adres, want buurtnamen verschillen per site."""
+    m = re.search(r"\b(1\d{3})\s?([A-Za-z]{2})\b", listing.get("address") or "")
+    if m and listing.get("price_eur"):
+        return f"pc:{m.group(1)}{m.group(2).upper()}:{listing['price_eur']}"
+    return None
+
+
 # ---------------------------------------------------------------- Claude
 
 EXTRACT_TOOL = {
@@ -353,7 +361,7 @@ def process_message(client, msg, state):
 
     results, new_keys, skipped = [], [], 0
     for l in listings:
-        keys = [k for k in (listing_id_from_url(l.get("url") or ""), fallback_key(l)) if k]
+        keys = [k for k in (listing_id_from_url(l.get("url") or ""), postcode_key(l), fallback_key(l)) if k]
         if not keys:
             keys = ["hash:" + hashlib.sha1(json.dumps(l, sort_keys=True).encode()).hexdigest()[:12]]
         if any(k in state["listings"] for k in keys):
