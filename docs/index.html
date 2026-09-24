@@ -51,6 +51,7 @@
     }
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html, body { margin: 0; }
   body {
     background: var(--bg);
@@ -506,8 +507,10 @@
     rejected.forEach((e) => reasonGroup(e).forEach((r) => reasons.set(r, (reasons.get(r) || 0) + 1)));
     hbars($("reasons"), [...reasons.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8));
     hbars($("areas"), count(list, (e) => e.area || "onbekend"));
-    const bucket = (p) => p == null ? null : p >= 3500 ? "€3.500+" : `€${(Math.floor(p / 500) * 500).toLocaleString("nl-NL")}–${(Math.floor(p / 500) * 500 + 499).toLocaleString("nl-NL")}`;
-    hbars($("prices"), count(list, (e) => bucket(e.price)).sort((a, b) => a[0].localeCompare(b[0], "nl", { numeric: true })));
+    const low = (p) => Math.min(Math.floor(p / 500) * 500, 3500);
+    const bucket = (p) => p == null ? null : low(p) >= 3500 ? "€3.500+" : `€${low(p).toLocaleString("nl-NL")}–${(low(p) + 499).toLocaleString("nl-NL")}`;
+    const priceOrder = new Map(list.filter((e) => e.price != null).map((e) => [bucket(e.price), low(e.price)]));
+    hbars($("prices"), count(list, (e) => bucket(e.price)).sort((a, b) => priceOrder.get(a[0]) - priceOrder.get(b[0])));
     hbars($("sources"), count(list, (e) => `${e.site || "?"} · ${e.source === "mail" ? "alert-mail" : e.source === "wachtlijst" ? "mail → pc" : "scraper"}`));
     renderRows(list);
   }
