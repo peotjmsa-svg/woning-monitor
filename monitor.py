@@ -404,7 +404,8 @@ def run():
             problem = str(e)
         except RequestException as e:
             problem = f"fout: {e}"
-            print(f"Fout bij {url}: {e}")
+        if problem:
+            print(f"Probleem bij {url}: {problem}")
         # Pas melden na 3 mislukte runs op rij, één time-out is geen probleem
         streaks[url] = streaks.get(url, 0) + 1 if problem else 0
         if problem and streaks[url] >= 3:
