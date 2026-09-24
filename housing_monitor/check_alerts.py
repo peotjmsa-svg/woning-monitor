@@ -35,9 +35,16 @@ from urllib.parse import unquote
 import anthropic
 from bs4 import BeautifulSoup
 
-STATE_FILE = Path(__file__).with_name("seen_listings.json")
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import config as CONFIG  # noqa: E402  zelfde prijs/kamers/gebieden als de scraper
+
+STATE_FILE = Path(__file__).with_name("seen_listings.json")   # GitHub: afgehandelde woningen
+QUEUE_FILE = Path(__file__).with_name("queue.json")           # GitHub: wachten op controle thuis
+HOME_SEEN_FILE = Path(__file__).with_name("home_seen.json")   # pc thuis: gecontroleerde woningen
+# Zo lang wacht een kandidaat op controle door de pc thuis; daarna mailt GitHub hem ongecontroleerd
+FALLBACK_MINUTES = int(os.environ.get("FALLBACK_MINUTES") or 60)
 MODEL = os.environ.get("CLAUDE_MODEL") or "claude-sonnet-4-5"
-SENDERS = ["pararius", "huurwoningen"]      # matcht op het afzenderadres
+SENDERS = ["pararius", "huurwoningen"]      # matcht op het afzenderadres; meer sites: hier toevoegen
 LOOKBACK_DAYS = 7                            # zo ver terug kijken naar alert-mails
 STATE_TTL_DAYS = 90
 MAX_EMAIL_CHARS = 60_000                     # langer dan dit: melden i.p.v. stil afkappen
@@ -126,11 +133,81 @@ def fallback_key(listing):
     return f"addr:{addr}:{listing.get('price_eur') or '?'}" if addr else None
 
 
-def postcode_key(listing):
-    """Postcode + prijs: robuuster dan het adres, want buurtnamen verschillen per site."""
+def postcode_of(listing):
     m = re.search(r"\b(1\d{3})\s?([A-Za-z]{2})\b", listing.get("address") or "")
-    if m and listing.get("price_eur"):
-        return f"pc:{m.group(1)}{m.group(2).upper()}:{listing['price_eur']}"
+    return f"{m.group(1)}{m.group(2).upper()}" if m else None
+
+
+def postcode_key(listing):
+    """Postcode + prijs: robuuster dan het adres, want buurtnamen verschillen per site.
+    Deze sleutel gebruikt de pc thuis ook, zo herkennen beide bronnen elkaars woningen."""
+    pc = postcode_of(listing)
+    return f"pc:{pc}:{listing['price_eur']}" if pc and listing.get("price_eur") else None
+
+
+def listing_keys(listing):
+    keys = [k for k in (listing_id_from_url(listing.get("url") or ""), postcode_key(listing),
+                        fallback_key(listing)) if k]
+    return keys or ["hash:" + hashlib.sha1(json.dumps(listing, sort_keys=True).encode()).hexdigest()[:12]]
+
+
+# ---------------------------------------------------------------- gratis voorfilter
+
+# Vast formaat van Huurwoningen-alerts:
+#   Steve Bikoplein [L2]
+#   1092GN Amsterdam (Oud-Oost)
+#   € 2.900 per maand
+#   80 m²  ·  3 kamers  ·  Gemeubileerd  ·  Appartement
+HW_CARD_RE = re.compile(
+    r"^(?P<street>[^\n\[]+?) \[(?P<ref>L\d+)\]\n"
+    r"(?P<pc>1\d{3}\s?[A-Z]{2}) (?P<city>[^\n(]+?)(?: \((?P<area>[^)\n]+)\))?\n"
+    r"€\s?(?P<price>[\d.]+) per maand\n"
+    r"(?P<facts>[^\n]*)", re.M)
+
+
+def parse_known_format(text, links):
+    """Woningen uit een alert met bekend formaat, zonder Claude. None = formaat niet herkend."""
+    out = []
+    for m in HW_CARD_RE.finditer(text):
+        facts = m.group("facts")
+        rooms = re.search(r"(\d+)\s+kamers?", facts)
+        size = re.search(r"(\d+)\s*m²", facts)
+        area = f" ({m.group('area')})" if m.group("area") else ""
+        out.append({
+            "address": f"{m.group('street').strip()}, {m.group('pc')}{area}",
+            "city": m.group("city").strip(),
+            "price_eur": int(m.group("price").replace(".", "")),
+            "rooms": int(rooms.group(1)) if rooms else None,
+            "size_m2": int(size.group(1)) if size else None,
+            "url": links.get(m.group("ref")),
+            "other_details": re.sub(r"\s+", " ", facts).strip(),
+        })
+    return out or None
+
+
+def area_of(postcode):
+    if not postcode:
+        return None
+    n = int(postcode[:4])
+    for area, ranges in CONFIG.AREAS.items():
+        if any(lo <= n <= hi for lo, hi in ranges):
+            return area
+    return "buiten de ring"
+
+
+def prefilter(listing):
+    """Harde criteria zonder Claude. Geeft een afwijsreden, of None als Claude moet kijken."""
+    price, rooms = listing.get("price_eur"), listing.get("rooms")
+    if price and price > CONFIG.MAX_PRICE:
+        return f"te duur (€{price})"
+    if rooms and rooms < CONFIG.MIN_ROOMS:
+        return f"te weinig kamers ({rooms})"
+    area = area_of(postcode_of(listing))
+    if area == "buiten de ring":
+        return f"buiten de ring ({postcode_of(listing)})"
+    limit = CONFIG.AREA_MAX_PRICE_PER_ROOM.get(area)
+    if limit and price and rooms and price / rooms > limit:
+        return f"{area} en geen topdeal (€{price / rooms:.0f}/kamer)"
     return None
 
 
@@ -246,7 +323,8 @@ def call_cli(tool, system, content):
     with tempfile.TemporaryDirectory() as empty_dir:
         Path(empty_dir, "system.txt").write_text(system, encoding="utf-8")
         proc = subprocess.run(cmd, input=content, capture_output=True, text=True,
-                              encoding="utf-8", cwd=empty_dir, timeout=300)
+                              encoding="utf-8", cwd=empty_dir, timeout=300,
+                              creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     try:
         out = json.loads(proc.stdout)
     except ValueError:
@@ -258,6 +336,11 @@ def call_cli(tool, system, content):
 
 
 def extract_listings(client, subject, sender, text, links):
+    known = parse_known_format(text, links)
+    if known:
+        return known
+    if not re.search(r"€\s?\d", text):       # bv. welkomstmail: geen prijzen, dus geen woningen
+        return []
     if len(text) > MAX_EMAIL_CHARS:
         raise RuntimeError(f"mail te lang ({len(text)} tekens) om in één keer te verwerken")
     data = call_tool(
@@ -292,7 +375,9 @@ def fmt_price(p):
     return f"€{p:,}".replace(",", ".") if p else "prijs onbekend"
 
 
-def build_summary(results):
+def build_summary(results, checked=False):
+    """results: [{"listing", "verdict", optioneel "warnings"}]. checked=False: gegevens komen
+    alleen uit de alert-mail, de advertentie zelf is niet gelezen."""
     order = {"fit": 0, "twijfel": 1}
     results = sorted(results, key=lambda r: order[r["verdict"]["verdict"]])
     fits = sum(r["verdict"]["verdict"] == "fit" for r in results)
@@ -310,12 +395,24 @@ def build_summary(results):
         title = escape(l.get("address") or "Onbekend adres")
         link = (f"<a href='{escape(l['url'])}' style='font-size:16px;font-weight:600'>{title}</a>"
                 if l.get("url") else f"<b>{title}</b>")
-        risks = "".join(f"<div style='color:#b91c1c'>⚠️ {escape(x)}</div>" for x in v.get("risks", []))
+        risks = "".join(f"<div style='color:#b91c1c'>⚠️ {escape(x)}</div>"
+                        for x in list(r.get("warnings", [])) + list(v.get("risks", [])))
         rows.append(f"<div style='margin:0 0 18px'>{badge} {link}<div>{escape(facts)}</div>"
                     f"<div style='color:#444'>{escape(v['reason'])}</div>{risks}</div>")
-    subject = f"🏠 {fits} passende woning{'en' if fits != 1 else ''}" + (
-        f" (+{twijfel} twijfel)" if twijfel else "")
-    return subject, f"<html><body style='font-family:sans-serif'>{''.join(rows)}</body></html>"
+    if fits:
+        subject = f"🏠 {fits} passende woning{'en' if fits != 1 else ''}" + (
+            f" (+{twijfel} twijfel)" if twijfel else "")
+    else:
+        subject = f"🤔 {twijfel} twijfelgeval{'len' if twijfel != 1 else ''}"
+    if checked:
+        note = "<p style='color:#15803d'>✔ Advertentie gelezen en gecontroleerd.</p>"
+    else:
+        subject += " – niet gecontroleerd"
+        note = ("<p style='color:#b45309'>Advertentie niet gecontroleerd (pc thuis stond uit): "
+                "dit is alleen beoordeeld op de gegevens uit de alert-mail. Check zelf op "
+                "studenten, garantsteller en inkomenseis.</p>")
+    return subject, (f"<html><body style='font-family:sans-serif'>{note}{''.join(rows)}"
+                     f"</body></html>")
 
 
 def send_email(subject, html):
@@ -341,6 +438,19 @@ def load_state():
     return state
 
 
+def load_json(path, default):
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
+
+
+def save_json(path, data):
+    path.write_text(json.dumps(data, indent=1, sort_keys=True, ensure_ascii=False), encoding="utf-8")
+
+
+def home_keys():
+    """Sleutels die de pc thuis al heeft afgehandeld (alleen lezen; de pc schrijft dit bestand)."""
+    return set(load_json(HOME_SEEN_FILE, {}).get("listings", {}))
+
+
 def save_state(state):
     cutoff = (datetime.now(timezone.utc) - timedelta(days=STATE_TTL_DAYS)).isoformat()
     for key in ("listings", "mails"):
@@ -351,30 +461,37 @@ def save_state(state):
 
 # ---------------------------------------------------------------- verwerking
 
-def process_message(client, msg, state):
-    """Verwerkt één alert-mail. Geeft (fit/twijfel-resultaten, sleutels van nieuwe woningen, aantal nieuw).
-    Gooit een exceptie als iets misgaat; de mail wordt dan de volgende run opnieuw geprobeerd."""
+def process_message(client, msg, state, known):
+    """Verwerkt één alert-mail. `known` = sleutels die al ergens zijn afgehandeld of in de
+    wachtlijst staan. Geeft (kandidaten voor de wachtlijst, sleutels om als afgehandeld op
+    te slaan, aantal nieuwe woningen). Gooit een exceptie als iets misgaat; de mail wordt
+    dan de volgende run opnieuw geprobeerd."""
     subject, sender = header(msg, "Subject"), header(msg, "From")
     text, links = email_to_text(msg)
     listings = extract_listings(client, subject, sender, text, links)
     log(f"  '{subject[:70]}': {len(listings)} woning(en) gevonden")
 
-    results, new_keys, skipped = [], [], 0
+    candidates, done_keys, new = [], [], 0
     for l in listings:
-        keys = [k for k in (listing_id_from_url(l.get("url") or ""), postcode_key(l), fallback_key(l)) if k]
-        if not keys:
-            keys = ["hash:" + hashlib.sha1(json.dumps(l, sort_keys=True).encode()).hexdigest()[:12]]
-        if any(k in state["listings"] for k in keys):
-            log(f"    = {l.get('address')} (al eerder verwerkt)")
-            skipped += 1
+        keys = listing_keys(l)
+        if any(k in known for k in keys):
+            log(f"    = {l.get('address')} (al eerder gezien)")
+            continue
+        new += 1
+        known.update(keys)                      # dubbelingen binnen dezelfde run overslaan
+        reason = prefilter(l)
+        if reason:
+            log(f"    voorfilter {l.get('address')}: {reason}")
+            done_keys.extend(keys)
             continue
         verdict = judge_listing(client, l)
-        new_keys.extend(keys)
         log(f"    {verdict['verdict']:9} {l.get('address')} {fmt_price(l.get('price_eur'))}"
             f" {l.get('rooms')}k: {verdict['reason']}")
         if verdict["verdict"] in ("fit", "twijfel"):
-            results.append({"listing": l, "verdict": verdict})
-    return results, new_keys, len(listings) - skipped
+            candidates.append({"keys": keys, "listing": l, "verdict": verdict})
+        else:
+            done_keys.extend(keys)
+    return candidates, done_keys, new
 
 
 def fetch_alert_messages(imap, state):
@@ -420,41 +537,63 @@ def run():
         sys.exit(f"Ontbrekende omgevingsvariabelen: {', '.join(missing)}")
 
     state = load_state()
-    now = datetime.now(timezone.utc).isoformat()
+    queue = load_json(QUEUE_FILE, {"items": []})
+    now_dt = datetime.now(timezone.utc)
+    now = now_dt.isoformat()
     client = make_client()
+    home = home_keys()
+    known = set(state["listings"]) | home | {k for it in queue["items"] for k in it["keys"]}
 
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(os.environ["GMAIL_ADDRESS"], os.environ["GMAIL_APP_PASSWORD"])
     try:
         todo = fetch_alert_messages(imap, state)
-        all_results, done, n_new, failed = [], [], 0, 0
+        done, n_new, n_queued, failed = [], 0, 0, 0
         for imap_id, mid, msg in todo:
             try:
-                results, keys, new = process_message(client, msg, state)
+                candidates, done_keys, new = process_message(client, msg, state, known)
             except (anthropic.APIError, RuntimeError) as e:
                 failed += 1
                 log(f"  FOUT bij '{header(msg, 'Subject')[:60]}': {e} (volgende run opnieuw)")
                 continue
-            all_results.extend(results)
             n_new += new
-            done.append((imap_id, mid))
-            for k in keys:                      # dubbelingen binnen dezelfde run overslaan
+            n_queued += len(candidates)
+            for c in candidates:
+                c["queued_at"] = now
+                queue["items"].append(c)
+            for k in done_keys:
                 state["listings"][k] = now
+            done.append((imap_id, mid))
+        log(f"Resultaat: {n_new} nieuwe woning(en), {n_queued} naar de wachtlijst, "
+            f"{failed} mislukte mail(s)")
 
-        fits = sum(r["verdict"]["verdict"] == "fit" for r in all_results)
-        log(f"Resultaat: {n_new} nieuwe woning(en) beoordeeld, {fits} fit, "
-            f"{len(all_results) - fits} twijfel, {failed} mislukte mail(s)")
+        # Wachtlijst: wat de pc thuis al gecontroleerd heeft valt eraf; wat te lang wacht
+        # wordt ongecontroleerd gemaild.
+        keep, overdue = [], []
+        deadline = (now_dt - timedelta(minutes=FALLBACK_MINUTES)).isoformat()
+        for it in queue["items"]:
+            if any(k in home for k in it["keys"]):
+                log(f"  ✔ {it['listing'].get('address')}: al gecontroleerd door de pc thuis")
+                for k in it["keys"]:
+                    state["listings"][k] = now
+            elif it["queued_at"] <= deadline:
+                overdue.append(it)
+            else:
+                keep.append(it)
+        log(f"Wachtlijst: {len(keep)} wacht op de pc thuis, {len(overdue)} te lang gewacht")
 
-        # Eerst mailen, dan pas de state opslaan: als het mailen faalt, komt alles
-        # de volgende run opnieuw.
-        if all_results:
-            send_email(*build_summary(all_results))
-        else:
-            log("Geen passende woningen, geen mail verstuurd")
+        # Eerst mailen, dan pas opslaan: als het mailen faalt, komt alles de volgende run opnieuw.
+        if overdue:
+            send_email(*build_summary(overdue, checked=False))
+            for it in overdue:
+                for k in it["keys"]:
+                    state["listings"][k] = now
+        queue["items"] = keep
 
         for imap_id, mid in done:
             state["mails"][mid] = now
         save_state(state)
+        save_json(QUEUE_FILE, queue)
         for imap_id, _ in done:
             imap.store(imap_id, "+FLAGS", "\\Seen")
         log(f"{len(done)} mail(s) als verwerkt en gelezen gemarkeerd")
@@ -471,7 +610,7 @@ def test_eml(path):
     """Verwerkt één opgeslagen .eml-bestand zonder IMAP, SMTP of state."""
     msg = email.message_from_bytes(Path(path).read_bytes())
     client = make_client()
-    results, _, _ = process_message(client, msg, {"listings": {}, "mails": {}})
+    results, _, _ = process_message(client, msg, {"listings": {}, "mails": {}}, set())
     subject, html = build_summary(results) if results else ("(geen matches)", "")
     log(f"\nZou mailen: {subject}")
 

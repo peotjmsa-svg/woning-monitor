@@ -1,20 +1,28 @@
-# Huizenjacht-monitor via e-mailalerts
+# Huizenjacht-monitor
 
-Draait elke 2 uur op GitHub Actions. In plaats van Pararius en Huurwoningen.nl zelf te
-scrapen (Cloudflare blokkeert dat vanaf GitHub) leest hij de gratis alert-mails die die
-sites sturen:
+Twee bronnen die samen één lijst bijhouden, zodat je elke woning maar één keer krijgt:
 
-1. Leest via IMAP de alert-mails van Pararius en Huurwoningen.nl van de afgelopen 7 dagen
-2. Claude haalt de losse woningen uit elke mail (adres, prijs, kamers, m², link, inkomenseis)
-3. Nieuwe woningen worden door Claude beoordeeld op de criteria in `check_alerts.py`
-   (`CRITERIA`): **fit**, **twijfel** of **geen fit**, met een korte onderbouwing
-4. Alle fit- en twijfel-woningen gaan in één mail naar `DESTINATION_EMAIL`
-5. Verwerkte mails worden als gelezen gemarkeerd; `seen_listings.json` onthoudt welke
-   woningen en mails al gedaan zijn en wordt door de workflow terug gecommit
+**GitHub (altijd aan, elk kwartier)** — `check_alerts.py`
+1. Leest de alert-mails van Pararius en Huurwoningen.nl (IMAP, afgelopen 7 dagen)
+2. Haalt de woningen eruit: Huurwoningen-alerts met een vaste parser (gratis), andere
+   mails via Claude
+3. Gratis voorfilter op prijs, kamers en postcode binnen de ring (`config.py`); wat
+   overblijft beoordeelt Claude op de gegevens uit de mail
+4. Kandidaten gaan naar de wachtlijst (`queue.json`) voor controle door de pc thuis
+5. Staat een kandidaat na `FALLBACK_MINUTES` (standaard 60) nog op de wachtlijst, dan
+   mailt GitHub hem toch, gemarkeerd als **niet gecontroleerd**
 
-Een mail telt als verwerkt op basis van zijn Message-ID, dus ook een alert die je zelf al
-op je telefoon hebt geopend wordt meegenomen. Dezelfde woning op beide sites wordt
-herkend aan het listing-id of aan adres + prijs.
+**Pc thuis (Taakplanner, elk kwartier als hij aan staat)** — `home_run.py`
+1. Haalt de wachtlijst van GitHub op en opent die advertenties (vanaf je thuisverbinding
+   laat Cloudflare dat wel toe)
+2. Zoekt zelf ook op de sites (de scraper uit `monitor.py`)
+3. Leest de volledige advertentie: filtert op studenten, garantsteller, woningdelers,
+   woningruil, max. 2 personen en inkomenseis, en laat Claude oordelen (incl. de
+   "moet studeren in Amsterdam"-eis)
+4. Mailt de woningen die passen, gemarkeerd als **gecontroleerd**
+5. Pusht `home_seen.json` naar GitHub, zodat GitHub die woningen niet nog eens mailt
+
+Dezelfde woning wordt overal herkend aan het listing-id of aan postcode + prijs.
 
 ## 1. Zoekalerts instellen
 
@@ -64,12 +72,27 @@ Repo → **Settings** → **Secrets and variables** → **Actions** → **New re
 | `CLAUDE_CODE_OAUTH_TOKEN` | het token van stap 3 |
 | `DESTINATION_EMAIL` | waar de samenvatting heen moet; meerdere adressen komma-gescheiden |
 
-## 5. Handmatig testen
+## 5. De pc thuis
+
+Vul `.env` in de hoofdmap in met dezelfde waarden als de secrets (`GMAIL_ADDRESS`,
+`GMAIL_APP_PASSWORD`, `DESTINATION_EMAIL`). Claude gebruikt op de pc je eigen Claude
+Code-login. Zolang `.env` leeg is slaat de taak elke run over. De taak in Taakplanner
+heet `Woning-monitor` en draait `housing_monitor\home_run.py`; de log staat in
+`monitor.log`. Proefrun zonder mailen of pushen:
+
+```
+.venv\Scripts\python housing_monitor\home_run.py --dry-run
+```
+
+Later op een Raspberry Pi: zelfde repo klonen, `.env` invullen, Claude Code installeren
+en inloggen, en `home_run.py` elk kwartier via cron draaien.
+
+## 6. Handmatig testen
 
 Tab **Actions** → **Housing monitor (e-mailalerts)** → **Run workflow**. In de log van de
 stap *Alert-mails verwerken* zie je hoeveel alert-mails er zijn gevonden, hoeveel woningen
 er uit kwamen, het oordeel per woning en of er een mail is verstuurd. Daarna draait hij
-vanzelf elke 2 uur.
+vanzelf elk kwartier.
 
 Mislukt een mail (bijv. API-fout), dan wordt die niet als verwerkt gemarkeerd, de run
 krijgt een rood kruisje, en de volgende run probeert het opnieuw.

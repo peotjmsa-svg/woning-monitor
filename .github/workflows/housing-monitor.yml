@@ -2,7 +2,7 @@ name: Housing monitor (e-mailalerts)
 
 on:
   schedule:
-    - cron: '0 */2 * * *'    # elke 2 uur (GitHub loopt soms wat achter)
+    - cron: '*/15 * * * *'   # elk kwartier (GitHub loopt soms wat achter); nodig voor het vangnet van 1 uur
   workflow_dispatch:          # handmatig testen via de Actions-tab
 
 permissions:
@@ -44,11 +44,10 @@ jobs:
       - name: Verwerkte listings onthouden
         if: always()              # ook opslaan als een mail mislukte; de rest is dan wel verwerkt
         run: |
-          f=housing_monitor/seen_listings.json
-          [ -f "$f" ] || exit 0
+          cd housing_monitor
           git config user.name "woning-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$f"
+          git add seen_listings.json queue.json 2>/dev/null || true
           git diff --cached --quiet && exit 0
-          git commit -m "seen_listings update"
+          git commit -m "seen_listings/queue update"
           git pull --rebase && git push
