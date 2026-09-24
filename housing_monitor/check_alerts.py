@@ -10,8 +10,9 @@ Gebruik:
   python housing_monitor/check_alerts.py --eml alert.eml  # één opgeslagen mail testen,
                                                           # print het resultaat, mailt niets
 
-Omgevingsvariabelen: GMAIL_ADDRESS, GMAIL_APP_PASSWORD, ANTHROPIC_API_KEY,
-DESTINATION_EMAIL (komma-gescheiden mag), optioneel CLAUDE_MODEL.
+Omgevingsvariabelen: GMAIL_ADDRESS, GMAIL_APP_PASSWORD, DESTINATION_EMAIL (komma-gescheiden
+mag), en CLAUDE_CODE_OAUTH_TOKEN (Claude-abonnement, via `claude -p`) of ANTHROPIC_API_KEY
+(betalen per gebruik). Optioneel CLAUDE_MODEL.
 """
 import email
 import hashlib
@@ -19,8 +20,11 @@ import imaplib
 import json
 import os
 import re
+import shutil
 import smtplib
+import subprocess
 import sys
+import tempfile
 from datetime import datetime, timedelta, timezone
 from email.header import decode_header, make_header
 from email.mime.text import MIMEText
@@ -191,6 +195,10 @@ Een alert-mail bevat vaak weinig details. Ontbrekende informatie is geen reden v
 
 
 def call_tool(client, tool, system, content, max_tokens):
+    """Laat Claude een JSON-object volgens tool['input_schema'] teruggeven.
+    client=None: via de Claude Code CLI met je abonnement (CLAUDE_CODE_OAUTH_TOKEN)."""
+    if client is None:
+        return call_cli(tool, system, content)
     response = client.messages.create(
         model=MODEL,
         max_tokens=max_tokens,
@@ -205,6 +213,40 @@ def call_tool(client, tool, system, content, max_tokens):
         if block.type == "tool_use" and block.name == tool["name"]:
             return block.input
     raise RuntimeError(f"Claude gaf geen {tool['name']}-resultaat (stop_reason={response.stop_reason})")
+
+
+def call_cli(tool, system, content):
+    """`claude -p` met een eigen korte systeemprompt, zonder tools, MCP of instellingen.
+    Zonder die opties laadt Claude Code zijn volledige standaardcontext (~20-80k tokens per
+    aanroep), wat de limiet van een abonnement snel opmaakt. In een lege map, zodat
+    tekst uit een mail nergens bij kan."""
+    exe = shutil.which("claude")
+    if not exe:
+        raise RuntimeError("Claude Code CLI niet gevonden (npm install -g @anthropic-ai/claude-code)")
+    # Systeemprompt via een bestand: regeleinden in een argument breken de aanroep
+    # op Windows (claude.cmd), waarna de overige opties stil wegvallen.
+    cmd = [exe, "-p", tool["description"],
+           "--system-prompt-file", "system.txt",
+           "--output-format", "json",
+           "--json-schema", json.dumps(tool["input_schema"]),
+           "--model", MODEL,
+           "--tools", "",
+           "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
+           "--setting-sources", "",
+           "--max-turns", "3",
+           "--no-session-persistence"]
+    with tempfile.TemporaryDirectory() as empty_dir:
+        Path(empty_dir, "system.txt").write_text(system, encoding="utf-8")
+        proc = subprocess.run(cmd, input=content, capture_output=True, text=True,
+                              encoding="utf-8", cwd=empty_dir, timeout=300)
+    try:
+        out = json.loads(proc.stdout)
+    except ValueError:
+        raise RuntimeError(f"claude -p gaf geen JSON (exit {proc.returncode}): "
+                           f"{(proc.stderr or proc.stdout)[:300]}")
+    if out.get("is_error") or out.get("structured_output") is None:
+        raise RuntimeError(f"claude -p mislukt ({out.get('subtype')}): {str(out.get('result'))[:300]}")
+    return out["structured_output"]
 
 
 def extract_listings(client, subject, sender, text, links):
@@ -351,16 +393,27 @@ def fetch_alert_messages(imap, state):
     return todo
 
 
+def make_client():
+    """Met een API-key: de Anthropic SDK (betalen per gebruik).
+    Anders: None = via `claude -p` op je Claude-abonnement."""
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        log(f"Model: {MODEL} via de API (ANTHROPIC_API_KEY)")
+        return anthropic.Anthropic()
+    log(f"Model: {MODEL} via je Claude-abonnement (claude -p)")
+    return None
+
+
 def run():
-    missing = [k for k in ("GMAIL_ADDRESS", "GMAIL_APP_PASSWORD", "ANTHROPIC_API_KEY", "DESTINATION_EMAIL")
+    missing = [k for k in ("GMAIL_ADDRESS", "GMAIL_APP_PASSWORD", "DESTINATION_EMAIL")
                if not os.environ.get(k)]
+    if not (os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("ANTHROPIC_API_KEY")):
+        missing.append("CLAUDE_CODE_OAUTH_TOKEN (abonnement) of ANTHROPIC_API_KEY")
     if missing:
         sys.exit(f"Ontbrekende omgevingsvariabelen: {', '.join(missing)}")
 
     state = load_state()
     now = datetime.now(timezone.utc).isoformat()
-    client = anthropic.Anthropic()
-    log(f"Model: {MODEL}")
+    client = make_client()
 
     imap = imaplib.IMAP4_SSL("imap.gmail.com")
     imap.login(os.environ["GMAIL_ADDRESS"], os.environ["GMAIL_APP_PASSWORD"])
@@ -409,7 +462,7 @@ def run():
 def test_eml(path):
     """Verwerkt één opgeslagen .eml-bestand zonder IMAP, SMTP of state."""
     msg = email.message_from_bytes(Path(path).read_bytes())
-    client = anthropic.Anthropic()
+    client = make_client()
     results, _, _ = process_message(client, msg, {"listings": {}, "mails": {}})
     subject, html = build_summary(results) if results else ("(geen matches)", "")
     log(f"\nZou mailen: {subject}")

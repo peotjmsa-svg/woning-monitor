@@ -34,11 +34,23 @@ Voor het Gmail-account dat de alerts ontvangt:
 IMAP staat in Gmail standaard aan. Werkt het inloggen niet, check dan Gmail →
 Instellingen → Doorsturen en POP/IMAP → IMAP inschakelen.
 
-## 3. Anthropic API-key
+## 3. Claude-abonnement koppelen (Pro/Max)
 
-Maak een key aan op https://console.anthropic.com/settings/keys en zet er wat tegoed op
-(Billing). Kosten: een paar cent per alert-mail; met een handvol alerts per dag ruim
-onder de €5 per maand.
+De monitor gebruikt je Claude-abonnement via Claude Code (`claude -p`), dus geen API-kosten.
+Maak eenmalig een token aan op je eigen pc:
+
+```
+claude setup-token
+```
+
+Log in in de browser en kopieer het token dat verschijnt (begint met `sk-ant-oat`).
+
+Elke beoordeling telt mee voor de gebruikslimiet van je abonnement, die je deelt met je
+eigen gebruik van Claude. Per aanroep is dat klein (±1.500 tokens), maar bij heel veel
+alert-mails per dag telt het op.
+
+Liever per gebruik betalen via de API? Zet dan een `ANTHROPIC_API_KEY`-secret (van
+https://console.anthropic.com/settings/keys). Als die er is, gebruikt de monitor die.
 
 ## 4. GitHub Secrets
 
@@ -49,7 +61,7 @@ Repo → **Settings** → **Secrets and variables** → **Actions** → **New re
 |---|---|
 | `GMAIL_ADDRESS` | het Gmail-adres dat de alerts ontvangt |
 | `GMAIL_APP_PASSWORD` | het app-wachtwoord van stap 2 (voor datzelfde adres) |
-| `ANTHROPIC_API_KEY` | de key van stap 3 |
+| `CLAUDE_CODE_OAUTH_TOKEN` | het token van stap 3 |
 | `DESTINATION_EMAIL` | waar de samenvatting heen moet; meerdere adressen komma-gescheiden |
 
 ## 5. Handmatig testen
@@ -68,11 +80,11 @@ Sla een alert-mail op als `.eml` (Gmail: ⋮ → *Downloaden als bericht*) en dr
 
 ```
 pip install -r housing_monitor/requirements.txt
-set ANTHROPIC_API_KEY=...        (PowerShell: $env:ANTHROPIC_API_KEY="...")
 python housing_monitor/check_alerts.py --eml pad/naar/alert.eml
 ```
 
-Dat laat per woning het oordeel zien, zonder IMAP, zonder mail en zonder iets op te slaan.
+Dat gebruikt je eigen Claude Code-login op die pc en laat per woning het oordeel zien,
+zonder IMAP, zonder mail en zonder iets op te slaan.
 
 ## Aanpassen
 

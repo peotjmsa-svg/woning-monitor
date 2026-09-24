@@ -27,11 +27,17 @@ jobs:
 
       - run: pip install -r housing_monitor/requirements.txt
 
+      - name: Claude Code installeren (voor je Claude-abonnement)
+        run: npm install -g @anthropic-ai/claude-code
+
       - name: Alert-mails verwerken
         run: python housing_monitor/check_alerts.py
         env:
           GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          # Eén van beide: het abonnementstoken (claude setup-token) of een API-key.
+          # Staat de API-key erin, dan wordt die gebruikt.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DESTINATION_EMAIL: ${{ secrets.DESTINATION_EMAIL }}
 
