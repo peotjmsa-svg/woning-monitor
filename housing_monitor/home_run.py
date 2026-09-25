@@ -26,6 +26,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
@@ -44,8 +45,18 @@ MAX_DESCRIPTION_CHARS = 12_000    # advertentieteksten zijn ±3.000 tekens; dit 
 MAX_PAGE_CHARS = 10_000           # paginatekst van een algemene site voor Claude (de advertentie staat vooraan)
 HEAD_CHARS = 2_500                # begin van de pagina waarin de voorfilter prijs/kamers/postcode zoekt
 MAX_GENERIC_PER_SITE = 10         # nieuwe advertenties per algemene site per run (Claude-aanroepen)
+# Taakplanner stopt een run na 14 minuten, en een afgebroken run slaat niets op: dan betaalt
+# de volgende run dezelfde Claude-aanroepen opnieuw. Na deze tijd pakt hij dus niets nieuws
+# meer op, maar mailt, bewaart en pusht hij wat hij heeft; de rest volgt de volgende run.
+RUN_SECONDS = 8 * 60
+DEADLINE = float("inf")           # gezet aan het begin van run()
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)   # geen consolevenster vanuit Taakplanner
 log = A.log
+
+
+def time_up():
+    return time.monotonic() > DEADLINE
+
 
 GENERIC_TOOL = {
     "name": "read_listing",
@@ -153,7 +164,6 @@ def generic_links(html, base_url, contains):
 
 def render(url):
     """Zoekpagina via een browser, voor sites die hun aanbod met JavaScript laden."""
-    import time
     from playwright.sync_api import Error as PlaywrightError, sync_playwright
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -291,6 +301,8 @@ def run_mijndak(name, client, seen, mark, record, sites_status, now):
     log(f"{name}: {len(homes)} woningen ({sum(d['passend'] for d in homes)} passend), {len(new)} nieuw")
     checked = 0
     for d in new:
+        if time_up():
+            break
         # Geen url-sleutel: alle detaillinks delen het pad /HuisDetails (alleen de query verschilt)
         pc_key = A.postcode_key({"address": d["postcode"] or "", "price_eur": d["price"]})
         keys = [f"mijndak:{d['id']}"] + ([pc_key] if pc_key else [])
@@ -322,6 +334,8 @@ def run_mijndak(name, client, seen, mark, record, sites_status, now):
 
 
 def run(dry_run=False):
+    global DEADLINE
+    DEADLINE = time.monotonic() + RUN_SECONDS
     if not dry_run:
         pulled = git("pull", "--rebase", "--autostash", "-q")
         if pulled.returncode:
@@ -368,6 +382,8 @@ def run(dry_run=False):
     todo = [it for it in queue["items"] if not any(k in home["listings"] for k in it["keys"])]
     log(f"Wachtlijst van GitHub: {len(todo)} te controleren")
     for it in todo:
+        if time_up():
+            break
         url = it["listing"].get("url")
         if not url:
             continue
@@ -384,6 +400,9 @@ def run(dry_run=False):
     # 2. Zelf zoeken op de sites uit de instellingen
     budget = CONFIG.MAX_DETAIL_FETCHES_PER_RUN
     for site in CONFIG.SITES:
+        if time_up():
+            log("Tijd op: de overige sites volgen de volgende run")
+            break
         A.USAGE_LABEL = site["name"]
         if site["type"] == "mijndak":
             n_checked += run_mijndak(site["name"], client, seen, mark, record, sites_status, now)
@@ -411,7 +430,7 @@ def run(dry_run=False):
         M.polite_sleep()
 
         for url in new[:MAX_GENERIC_PER_SITE if generic else budget]:
-            if budget <= 0:
+            if budget <= 0 or time_up():
                 break
             if generic and site["type"] != "vesteda":     # Vesteda is al gefilterd op de API-gegevens
                 why, found = quick_reject(url)
