@@ -40,6 +40,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:22:45.670638+00:00"
   },
+  "4246f9cf": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:09:11.495154+00:00"
+  },
   "4963160a": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
@@ -159,6 +163,10 @@
   "ac78c8f4": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "addr:haarlemmerhouttuinen1013gmcentrumwest:1228": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:09:11.495154+00:00"
   },
   "b2d38b5f": {
    "result": "al gezien",
@@ -1063,6 +1071,10 @@
   "pc:1011MB:976": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
+  },
+  "pc:1013GM:1228": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:09:11.495154+00:00"
   },
   "pc:1013GM:1248": {
    "result": "gemaild",
@@ -1995,6 +2007,10 @@
   "url:www.huurwoningen.nl/huren/amsterdam/2effc3b5/dorus-rijkershof": {
    "result": "afgewezen",
    "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.huurwoningen.nl/huren/amsterdam/4246f9cf/haarlemmer-houttuinen": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:09:11.495154+00:00"
   },
   "url:www.huurwoningen.nl/huren/amsterdam/7a45d0a1/jacob-honigstraat": {
    "result": "afgewezen",

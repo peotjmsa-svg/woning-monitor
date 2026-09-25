@@ -2879,6 +2879,21 @@
    "stage": "filters",
    "t": "2026-09-25T07:05:06+00:00",
    "url": "https://amsterdam.mijndak.nl/HuisDetails"
+  },
+  {
+   "area": "Centrum",
+   "name": "Appartement Haarlemmer Houttuinen in Amsterdam, 1013 GM (Centrum)",
+   "postcode": "1013GM",
+   "price": 1228,
+   "reason": "Perfecte locatie in Centrum (binnen ring), slechts €1228/maand voor 4 kamers, en geen uitsluitingen of hoge eisen voor studenten vermeld in de advertentie.",
+   "result": "gemaild",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 86,
+   "source": "wachtlijst",
+   "stage": "Claude (advertentie)",
+   "t": "2026-09-25T07:09:37+00:00",
+   "url": "https://www.huurwoningen.nl/huren/amsterdam/4246f9cf/haarlemmer-houttuinen/"
   }
  ],
  "sites": {
@@ -2894,22 +2909,22 @@
    "found": 10,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T03:08:42.510382+00:00"
+   "t": "2026-09-25T07:09:11.495154+00:00"
   },
   "Mijndak": {
    "error": null,
    "found": 170,
-   "new": 36,
+   "new": 0,
    "ok": true,
-   "t": "2026-09-25T03:08:42.510382+00:00"
+   "t": "2026-09-25T07:09:11.495154+00:00"
   },
   "Pararius": {
    "error": null,
    "found": 30,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T03:08:42.510382+00:00"
+   "t": "2026-09-25T07:09:11.495154+00:00"
   }
  },
- "updated": "2026-09-25T07:05:09+00:00"
+ "updated": "2026-09-25T07:10:14+00:00"
 }
