@@ -41,7 +41,8 @@ import config as CONFIG           # noqa: E402
 import monitor as M               # noqa: E402  scraper en filters op de advertentietekst
 
 MAX_DESCRIPTION_CHARS = 12_000    # advertentieteksten zijn ±3.000 tekens; dit is ruim
-MAX_PAGE_CHARS = 15_000           # paginatekst van een algemene site voor Claude
+MAX_PAGE_CHARS = 10_000           # paginatekst van een algemene site voor Claude (de advertentie staat vooraan)
+HEAD_CHARS = 2_500                # begin van de pagina waarin de voorfilter prijs/kamers/postcode zoekt
 MAX_GENERIC_PER_SITE = 10         # nieuwe advertenties per algemene site per run (Claude-aanroepen)
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)   # geen consolevenster vanuit Taakplanner
 log = A.log
@@ -107,6 +108,7 @@ def as_listing(detail):
         "size_m2": detail.get("size"),
         "income_requirement_text": None,
         "url": detail["url"].split("?")[0],
+        "area": detail.get("area"),
     }
 
 
@@ -213,7 +215,37 @@ def judge_builtin(client, detail):
     return {"listing": listing, "verdict": verdict, "warnings": warnings}, "Claude (advertentie)", verdict["reason"]
 
 
-def read_generic(client, html, url):
+def quick_reject(url, text=""):
+    """Voorfilter zonder Claude voor algemene sites: wijst alleen af wat zeker niet past.
+    Postcode uit de link (Huispedia, IkWilHuren, REBO) of het begin van de pagina; prijs en
+    kamers alleen als élk bedrag of aantal bovenaan de pagina buiten je grenzen valt, zodat
+    een borg of een losse slaapkamer-vermelding geen goede woning wegfiltert.
+    Geeft (reden of None, gevonden gegevens)."""
+    head = text[:HEAD_CHARS]
+    pc = (re.search(r"(?:^|[/-])(1\d{3})-?([a-z]{2})(?=[/-]|$)", urlparse(url).path.lower())
+          or re.search(r"\b(1\d{3})\s?([A-Z]{2})\b", head))
+    # Prijs: het veld "Huurprijs" als dat er is, anders het laagste bedrag bovenaan (vanaf
+    # €500, zodat servicekosten niet meetellen; een borg drijft het minimum niet op)
+    euro = r"€\s?(\d{1,2}[.,]?\d{3})\b"
+    labeled = re.search(r"huurprijs\W{0,5}" + euro, text, re.I)
+    prices = [p for p in (int(re.sub(r"[.,]", "", m)) for m in re.findall(euro, head)) if p >= 500]
+    price = int(re.sub(r"[.,]", "", labeled.group(1))) if labeled else min(prices, default=None)
+    # Kamers: het veld "(Aantal) kamers" (geen slaap- of badkamers), anders "4 kamers" bovenaan
+    labeled = re.search(r"(?<![a-z])kamers\W{0,3}(\d{1,2})\b(?!\s*m)", text, re.I)   # niet "72 m²"
+    rooms = [int(n) for n in re.findall(r"\b(\d{1,2})[\s-]*(?:kamers?|rooms?)", head, re.I)]
+    rooms = int(labeled.group(1)) if labeled else max(rooms, default=None)
+    found = {"postcode": f"{pc.group(1)} {pc.group(2).upper()}" if pc else None,
+             "price": price, "rooms": rooms}
+    if found["postcode"] and M.classify_area(found["postcode"]) == "buiten de ring":
+        return f"buiten de ring ({found['postcode']})", found
+    if found["price"] and found["price"] > CONFIG.MAX_PRICE:
+        return f"te duur (€{found['price']})", found
+    if found["rooms"] and found["rooms"] < CONFIG.MIN_ROOMS:
+        return f"te weinig kamers ({found['rooms']})", found
+    return None, found
+
+
+def read_generic(client, html, url, postcode=None):
     """Algemene site: Claude haalt de gegevens eruit en oordeelt in één aanroep.
     Geeft (detail-dict of None als het geen advertentie is, oordeel, waarschuwingen)."""
     text, warnings = page_text(html), []
@@ -225,7 +257,9 @@ def read_generic(client, html, url):
               "en andere woningen die op de pagina als suggestie staan. is_listing is alleen false "
               "als de pagina niet over één specifieke woning gaat (overzicht, categorie, foutpagina); "
               "een woningruil of dure woning is wél een advertentie, die wijs je af.")
-    data = A.call_tool(client, GENERIC_TOOL, system, f"URL: {url}\n\n{text}", max_tokens=1500)
+    area = M.classify_area(postcode) if postcode else None
+    known = f"gebied_op_postcode: {area} (postcode {postcode})\n" if area else ""
+    data = A.call_tool(client, GENERIC_TOOL, system, f"URL: {url}\n{known}\n{text}", max_tokens=1500)
     if not data.get("is_listing"):
         return None, None, warnings
     pc = re.search(r"(1\d{3})\s?([A-Za-z]{2})", data.get("postcode") or "")
@@ -330,6 +364,7 @@ def run(dry_run=False):
         record(source, site, keys, as_listing(detail), "gemaild" if result else "afgewezen", stage, why, result)
 
     # 1. Wachtlijst van GitHub: woningen uit de alert-mails
+    A.USAGE_LABEL = "wachtlijst"
     todo = [it for it in queue["items"] if not any(k in home["listings"] for k in it["keys"])]
     log(f"Wachtlijst van GitHub: {len(todo)} te controleren")
     for it in todo:
@@ -349,6 +384,7 @@ def run(dry_run=False):
     # 2. Zelf zoeken op de sites uit de instellingen
     budget = CONFIG.MAX_DETAIL_FETCHES_PER_RUN
     for site in CONFIG.SITES:
+        A.USAGE_LABEL = site["name"]
         if site["type"] == "mijndak":
             n_checked += run_mijndak(site["name"], client, seen, mark, record, sites_status, now)
             continue
@@ -377,14 +413,30 @@ def run(dry_run=False):
         for url in new[:MAX_GENERIC_PER_SITE if generic else budget]:
             if budget <= 0:
                 break
+            if generic and site["type"] != "vesteda":     # Vesteda is al gefilterd op de API-gegevens
+                why, found = quick_reject(url)
+                if why:                                     # postcode in de link: niet eens ophalen
+                    record("scraper", name, [url_key(url)], as_listing(dict(found, name=url, url=url, size=None, bedrooms=None)),
+                           "afgewezen", "voorfilter", why)
+                    continue
             budget -= 1
             try:
                 html, final_url = fetch_final(session, url)
+                if generic and site["type"] != "vesteda":
+                    why, found = quick_reject(final_url, page_text(html))
+                    if why:
+                        record("scraper", name, [url_key(url), url_key(final_url)],
+                               as_listing(dict(found, name=url, url=final_url, size=None, bedrooms=None)),
+                               "afgewezen", "voorfilter", why)
+                        M.polite_sleep()
+                        continue
                 if not generic:
                     lid = A.listing_id_from_url(url)
                     handle_builtin("scraper", name, M.parse_detail(html, final_url), [lid, url_key(url)] if lid else [url_key(url)])
                 else:
-                    detail, verdict, warnings = read_generic(client, html, final_url)
+                    postcode = (hints.get(url, {}).get("postcode") if site["type"] == "vesteda"
+                                else found["postcode"])
+                    detail, verdict, warnings = read_generic(client, html, final_url, postcode)
                     keys = [url_key(url), url_key(final_url)]
                     if detail is None:
                         mark(keys, "geen advertentie")
@@ -430,8 +482,9 @@ def run(dry_run=False):
     home["listings"] = {k: v for k, v in home["listings"].items() if v["t"] >= cutoff}
     A.save_json(A.HOME_SEEN_FILE, home)
     A.save_log(A.LOG_HOME_FILE, events, sites_status)
+    A.save_usage(A.USAGE_HOME_FILE)
 
-    files = [str(p.relative_to(ROOT)) for p in (A.HOME_SEEN_FILE, A.LOG_HOME_FILE)]
+    files = [str(p.relative_to(ROOT)) for p in (A.HOME_SEEN_FILE, A.LOG_HOME_FILE, A.USAGE_HOME_FILE)]
     git("add", *files)
     if git("diff", "--cached", "--quiet").returncode:
         git("commit", "-q", "-m", "home_seen/log update", "--", *files)

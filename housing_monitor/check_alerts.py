@@ -25,6 +25,7 @@ import smtplib
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import datetime, timedelta, timezone
 from email.header import decode_header, make_header
 from email.mime.text import MIMEText
@@ -43,6 +44,9 @@ QUEUE_FILE = Path(__file__).with_name("queue.json")           # GitHub: wachten 
 HOME_SEEN_FILE = Path(__file__).with_name("home_seen.json")   # pc thuis: gecontroleerde woningen
 LOG_GITHUB_FILE = Path(__file__).with_name("log_github.json") # logboek voor het overzicht in de webapp
 LOG_HOME_FILE = Path(__file__).with_name("log_home.json")     # idem, geschreven door de pc thuis
+USAGE_GITHUB_FILE = Path(__file__).with_name("usage_github.json")  # Claude-verbruik per aanroep
+USAGE_HOME_FILE = Path(__file__).with_name("usage_home.json")
+USAGE_TTL_DAYS = 14
 LOG_MAX_ENTRIES = 2000
 MODEL = os.environ.get("CLAUDE_MODEL") or "claude-sonnet-4-5"
 LOOKBACK_DAYS = 7                            # zo ver terug kijken naar alert-mails
@@ -277,6 +281,8 @@ Oost binnen de ring (Oosterparkbuurt, Dapperbuurt, Indische Buurt, Watergraafsme
 Oostelijk Havengebied). Buiten de ring liggen o.a. Noord, Nieuw-West (Slotervaart, Osdorp, \
 Geuzenveld), Zuidoost, Buitenveldert, IJburg en Amstelveen. Postcodes binnen de ring \
 beginnen grofweg met 1011-1019, 1051-1059, 1071-1079 en 1091-1098.
+Staat er een gebied bij dat de code op de postcode heeft vastgesteld ("gebied_op_postcode"),
+dan klopt dat: neem het over en beoordeel de ligging niet zelf opnieuw.
 
 Oordeel:
 - "geen fit": een criterium wordt duidelijk niet gehaald.
@@ -287,11 +293,34 @@ Een alert-mail bevat vaak weinig details. Ontbrekende informatie is geen reden v
 "geen fit"; noem wat je niet kon controleren in de onderbouwing."""
 
 
+USAGE = []           # verbruik van deze run, zie record_usage()
+USAGE_LABEL = ""     # site waarvoor de volgende aanroepen zijn (door de aanroeper gezet)
+
+
+def record_usage(tool, model, inp, out, cache_w, cache_r, usd, ms, chars):
+    USAGE.append({"t": datetime.now(timezone.utc).isoformat(timespec="seconds"), "site": USAGE_LABEL,
+                  "purpose": tool["name"], "model": model, "in": inp, "out": out,
+                  "cache_w": cache_w, "cache_r": cache_r, "usd": round(usd, 5), "ms": ms, "chars": chars})
+
+
+def save_usage(path):
+    """Voegt het verbruik van deze run toe aan het verbruiksbestand (laatste USAGE_TTL_DAYS)."""
+    data = load_json(path, {"calls": []})
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=USAGE_TTL_DAYS)).isoformat()
+    data["calls"] = [c for c in data["calls"] + USAGE if c["t"] >= cutoff]
+    path.write_text(json.dumps(data, indent=0, ensure_ascii=False), encoding="utf-8")
+
+
+# Prijzen per miljoen tokens (lijstprijs) om het API-verbruik te schatten
+PRICES = {"haiku": (1, 5), "sonnet": (3, 15), "opus": (5, 25)}
+
+
 def call_tool(client, tool, system, content, max_tokens):
     """Laat Claude een JSON-object volgens tool['input_schema'] teruggeven.
     client=None: via de Claude Code CLI met je abonnement (CLAUDE_CODE_OAUTH_TOKEN)."""
     if client is None:
         return call_cli(tool, system, content)
+    start = time.monotonic()
     response = client.messages.create(
         model=MODEL,
         max_tokens=max_tokens,
@@ -300,6 +329,12 @@ def call_tool(client, tool, system, content, max_tokens):
         tool_choice={"type": "tool", "name": tool["name"]},
         messages=[{"role": "user", "content": content}],
     )
+    u = response.usage
+    p_in, p_out = next((v for k, v in PRICES.items() if k in MODEL), PRICES["sonnet"])
+    cw, cr = u.cache_creation_input_tokens or 0, u.cache_read_input_tokens or 0
+    record_usage(tool, MODEL, u.input_tokens, u.output_tokens, cw, cr,
+                 (u.input_tokens * p_in + cw * p_in * 1.25 + cr * p_in * 0.1 + u.output_tokens * p_out) / 1e6,
+                 int((time.monotonic() - start) * 1000), len(system) + len(content))
     if response.stop_reason == "max_tokens":
         raise RuntimeError(f"Claude-antwoord afgekapt (max_tokens) bij {tool['name']}")
     for block in response.content:
@@ -311,8 +346,9 @@ def call_tool(client, tool, system, content, max_tokens):
 def call_cli(tool, system, content):
     """`claude -p` met een eigen korte systeemprompt, zonder tools, MCP of instellingen.
     Zonder die opties laadt Claude Code zijn volledige standaardcontext (~20-80k tokens per
-    aanroep), wat de limiet van een abonnement snel opmaakt. In een lege map, zodat
-    tekst uit een mail nergens bij kan."""
+    aanroep), wat de limiet van een abonnement snel opmaakt. Extended thinking staat uit
+    (±800 extra outputtokens per aanroep; de ligging bepaalt de code al op postcode). In een lege
+    map, zodat tekst uit een mail nergens bij kan."""
     exe = shutil.which("claude")
     if not exe:
         raise RuntimeError("Claude Code CLI niet gevonden (npm install -g @anthropic-ai/claude-code)")
@@ -332,12 +368,17 @@ def call_cli(tool, system, content):
         Path(empty_dir, "system.txt").write_text(system, encoding="utf-8")
         proc = subprocess.run(cmd, input=content, capture_output=True, text=True,
                               encoding="utf-8", cwd=empty_dir, timeout=300,
+                              env=dict(os.environ, MAX_THINKING_TOKENS="0"),
                               creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     try:
         out = json.loads(proc.stdout)
     except ValueError:
         raise RuntimeError(f"claude -p gaf geen JSON (exit {proc.returncode}): "
                            f"{(proc.stderr or proc.stdout)[:300]}")
+    for model, m in (out.get("modelUsage") or {}).items():
+        record_usage(tool, model, m.get("inputTokens", 0), m.get("outputTokens", 0),
+                     m.get("cacheCreationInputTokens", 0), m.get("cacheReadInputTokens", 0),
+                     m.get("costUSD", 0), out.get("duration_ms", 0), len(system) + len(content))
     if out.get("is_error") or out.get("structured_output") is None:
         raise RuntimeError(f"claude -p mislukt ({out.get('subtype')}): {str(out.get('result'))[:300]}")
     return out["structured_output"]
@@ -370,6 +411,7 @@ def judge_listing(client, listing):
     facts = {k: listing.get(k) for k in
              ("address", "city", "price_eur", "rooms", "bedrooms", "size_m2",
               "income_requirement_text", "other_details")}
+    facts["gebied_op_postcode"] = listing.get("area")
     return call_tool(
         client, JUDGE_TOOL, judge_system(),
         "Beoordeel deze woning:\n" + json.dumps(facts, ensure_ascii=False, indent=1),
@@ -512,9 +554,11 @@ def process_message(client, msg, state, known, events=None):
     dan de volgende run opnieuw geprobeerd."""
     subject, sender = header(msg, "Subject"), header(msg, "From")
     text, links = email_to_text(msg)
+    global USAGE_LABEL
+    site = sender_site(sender)
+    USAGE_LABEL = f"{site} (mail)"
     listings = extract_listings(client, subject, sender, text, links)
     log(f"  '{subject[:70]}': {len(listings)} woning(en) gevonden")
-    site = sender_site(sender)
     events = events if events is not None else []
 
     candidates, done_keys, new = [], [], 0
@@ -648,6 +692,7 @@ def run():
         save_state(state)
         save_json(QUEUE_FILE, queue)
         save_log(LOG_GITHUB_FILE, events)
+        save_usage(USAGE_GITHUB_FILE)
         for imap_id, _ in done:
             imap.store(imap_id, "+FLAGS", "\\Seen")
         log(f"{len(done)} mail(s) als verwerkt en gelezen gemarkeerd")

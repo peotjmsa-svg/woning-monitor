@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude-verbruik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f2f4f1; --surface: #ffffff; --ink: #1c211f; --muted: #5e6762; --line: #d8ddd7;
+    --accent: #1f5f8b; --accent-soft: #e3eef6; --ok: #1d7a4a; --warn: #a86200; --bad: #b3261e;
+    --bar-rest: #c9cfca;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #111513; --surface: #1a1f1d; --ink: #e5eae7; --muted: #9ba49f; --line: #2e3633;
+      --accent: #6fb1e0; --accent-soft: #16283a; --ok: #55c98e; --warn: #f0a63d; --bad: #f2786e;
+      --bar-rest: #3d4642;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #111513; --surface: #1a1f1d; --ink: #e5eae7; --muted: #9ba49f; --line: #2e3633;
+    --accent: #6fb1e0; --accent-soft: #16283a; --ok: #55c98e; --warn: #f0a63d; --bad: #f2786e;
+    --bar-rest: #3d4642;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.5 "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+  h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
+  h2 { font-size: 16px; margin: 0 0 4px; }
+  a { color: var(--accent); }
+  .muted { color: var(--muted); }
+  .small { font-size: 13px; }
+  .num { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+  .seg button { font: inherit; font-size: 14px; border: 0; background: none; color: var(--ink); padding: 7px 14px; cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); font-weight: 600; }
+  .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .tile .label { font-size: 13px; color: var(--muted); }
+  .tile .value { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; }
+  .tile .sub { font-size: 12px; color: var(--muted); }
+  /* kolommen per uur/dag */
+  .cols { display: flex; align-items: flex-end; gap: 2px; height: 160px; border-bottom: 1px solid var(--line); margin-top: 14px; position: relative; }
+  .cols .c { flex: 1; min-width: 3px; height: 100%; display: flex; align-items: flex-end; cursor: default; }
+  .cols .c span { display: block; width: 100%; background: var(--accent); border-radius: 3px 3px 0 0; min-height: 0; }
+  .cols .c:hover span, .cols .c:focus span { filter: brightness(1.15); }
+  .cols .c.zero span { background: transparent; }
+  .axis { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .ymax { position: absolute; top: -2px; left: 0; font-size: 12px; color: var(--muted); background: var(--surface); padding-right: 6px; }
+  .gridline { position: absolute; left: 0; right: 0; top: 0; border-top: 1px dashed var(--line); }
+  /* balken per site */
+  .hbars { display: grid; grid-template-columns: minmax(90px, max-content) 1fr max-content; gap: 8px 12px; align-items: center; margin-top: 14px; }
+  .hbars .track { height: 14px; }
+  .hbars .fill { height: 14px; background: var(--accent); border-radius: 0 4px 4px 0; min-width: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; font-size: 13px; color: var(--muted); }
+  td.r, th.r { text-align: right; }
+  .scroll { overflow-x: auto; margin-top: 10px; }
+  .tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 13px; padding: 6px 9px; border-radius: 6px; white-space: nowrap; z-index: 10; display: none; }
+  .note { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; font-size: 14px; margin-bottom: 16px; }
+  .err { color: var(--bad); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Claude-verbruik</h1>
+      <p class="muted small" id="status" style="margin:2px 0 0">Laden…</p>
+    </div>
+    <div class="seg" role="group" aria-label="Periode">
+      <button type="button" data-days="1" aria-pressed="true">24 uur</button>
+      <button type="button" data-days="7" aria-pressed="false">7 dagen</button>
+      <button type="button" data-days="14" aria-pressed="false">14 dagen</button>
+    </div>
+  </header>
+
+  <p class="note">Tijdelijke pagina. Bedragen zijn wat dezelfde aanroepen via de API zouden kosten (lijstprijs); met je abonnement betaal je niet per aanroep, maar het is de beste maat voor hoeveel van je limiet het gebruikt. <a href="./">Terug naar de monitor</a></p>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="panel">
+    <h2 id="cols-title">Aanroepen per uur</h2>
+    <p class="muted small" style="margin:0">Pc thuis en GitHub samen. Beweeg over een kolom voor de details.</p>
+    <div class="cols" id="cols" aria-hidden="true"></div>
+    <div class="axis" id="axis"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Per site</h2>
+    <p class="muted small" style="margin:0">Geschatte kosten; achter de balk het aantal aanroepen.</p>
+    <div class="hbars" id="sites"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Advertenties: met of zonder Claude</h2>
+    <p class="muted small" style="margin:0">Uit het logboek van de pc. <b>Voorfilter</b> = afgewezen op postcode, prijs of kamers vóórdat Claude eraan te pas kwam; <b>filters</b> bij algemene sites was vóór vandaag ná een Claude-aanroep.</p>
+    <div class="scroll"><table id="stages"></table></div>
+  </div>
+
+  <div class="panel">
+    <h2>Laatste aanroepen</h2>
+    <div class="scroll"><table id="calls"></table></div>
+  </div>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+(() => {
+  const REPO = (() => { try { return localStorage.getItem("wm-repo"); } catch (e) { return null; } })() || "peotjmsa-svg/woning-monitor";
+  const FILES = { home: "housing_monitor/usage_home.json", github: "housing_monitor/usage_github.json", log: "housing_monitor/log_home.json" };
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const nf = (n, d = 0) => Number(n || 0).toLocaleString("nl-NL", { maximumFractionDigits: d, minimumFractionDigits: d });
+  const usd = (n) => "$" + nf(n, n < 1 ? 3 : 2);
+  const tok = (n) => n >= 1e6 ? nf(n / 1e6, 1) + " mln" : n >= 1e4 ? nf(n / 1e3, 0) + "k" : nf(n);
+  const PURPOSE = { read_listing: "advertentie lezen", judge_listing: "beoordelen", extract_listings: "mail uitlezen" };
+  let data = { calls: [], entries: [] }, days = 1;
+
+  async function get(path) {
+    const r = await fetch(`https://raw.githubusercontent.com/${REPO}/main/${path}?t=${Date.now()}`, { cache: "no-store" });
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error(`${path}: ${r.status}`);
+    return r.json();
+  }
+
+  async function load() {
+    try {
+      const [h, g, l] = await Promise.all([get(FILES.home), get(FILES.github), get(FILES.log)]);
+      data.calls = [...((h && h.calls) || []).map((c) => ({ ...c, where: "pc" })), ...((g && g.calls) || []).map((c) => ({ ...c, where: "GitHub" }))]
+        .sort((a, b) => a.t < b.t ? 1 : -1);
+      data.entries = (l && l.entries) || [];
+      $("status").textContent = `Bijgewerkt ${new Date().toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })} · ververst elke 2 minuten` +
+        (data.calls.length ? "" : " · nog geen verbruik gelogd (begint bij de eerste run na de update)");
+      render();
+    } catch (e) {
+      $("status").innerHTML = `<span class="err">Laden mislukt: ${esc(e.message)}</span>`;
+    }
+  }
+
+  const tokens = (c) => (c.in || 0) + (c.out || 0) + (c.cache_w || 0) + (c.cache_r || 0);
+
+  function render() {
+    const since = Date.now() - days * 864e5;
+    const calls = data.calls.filter((c) => Date.parse(c.t) >= since);
+    const entries = data.entries.filter((e) => Date.parse(e.t) >= since);
+    const cost = calls.reduce((s, c) => s + (c.usd || 0), 0);
+    const tk = calls.reduce((s, c) => s + tokens(c), 0);
+    const out = calls.reduce((s, c) => s + (c.out || 0), 0);
+    const saved = entries.filter((e) => e.stage === "voorfilter").length;
+    const period = days === 1 ? "laatste 24 uur" : `laatste ${days} dagen`;
+
+    $("tiles").innerHTML = [
+      ["Aanroepen", nf(calls.length), period],
+      ["Geschatte kosten", usd(cost), calls.length ? `${usd(cost / calls.length)} per aanroep` : "—"],
+      ["Tokens", tok(tk), calls.length ? `${nf(tk / calls.length)} per aanroep, ${nf(out / calls.length)} output` : "—"],
+      ["Zonder Claude afgewezen", nf(saved), "door de voorfilter"],
+    ].map(([l, v, s]) => `<div class="tile"><div class="label">${l}</div><div class="value num">${v}</div><div class="sub">${esc(s)}</div></div>`).join("");
+
+    // kolommen: per uur (24 uur) of per dag
+    const hourly = days === 1, step = hourly ? 36e5 : 864e5, n = hourly ? 24 : days;
+    const end = hourly ? Math.ceil(Date.now() / step) * step : (() => { const d = new Date(); d.setHours(24, 0, 0, 0); return d.getTime(); })();
+    const buckets = Array.from({ length: n }, (_, i) => ({ start: end - (n - i) * step, calls: 0, usd: 0, tokens: 0 }));
+    calls.forEach((c) => {
+      const i = Math.floor((Date.parse(c.t) - (end - n * step)) / step);
+      if (i >= 0 && i < n) { buckets[i].calls++; buckets[i].usd += c.usd || 0; buckets[i].tokens += tokens(c); }
+    });
+    const max = Math.max(1, ...buckets.map((b) => b.calls));
+    const label = (t) => hourly ? new Date(t).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" })
+      : new Date(t).toLocaleDateString("nl-NL", { weekday: "short", day: "numeric", month: "short" });
+    $("cols-title").textContent = hourly ? "Aanroepen per uur" : "Aanroepen per dag";
+    $("cols").innerHTML = `<div class="gridline"></div><span class="ymax num">${max}</span>` + buckets.map((b, i) =>
+      `<div class="c${b.calls ? "" : " zero"}" tabindex="0" data-i="${i}"><span style="height:${(b.calls / max) * 100}%"></span></div>`).join("");
+    $("axis").innerHTML = `<span>${label(buckets[0].start)}</span><span>${label(buckets[Math.floor(n / 2)].start)}</span><span>${hourly ? "nu" : "vandaag"}</span>`;
+    $("cols").querySelectorAll(".c").forEach((el) => {
+      const b = buckets[+el.dataset.i];
+      const text = `${label(b.start)}: ${b.calls} aanroep${b.calls === 1 ? "" : "en"} · ${tok(b.tokens)} tokens · ${usd(b.usd)}`;
+      el.setAttribute("aria-label", text);
+      const show = (ev) => { const t = $("tip"); t.textContent = text; t.style.display = "block";
+        const r = el.getBoundingClientRect(); const x = ev && ev.clientX ? ev.clientX : r.left + r.width / 2;
+        t.style.left = Math.min(window.innerWidth - t.offsetWidth - 8, Math.max(8, x - t.offsetWidth / 2)) + "px";
+        t.style.top = (r.top + r.height - (b.calls / max) * r.height - t.offsetHeight - 8) + "px"; };
+      const hide = () => { $("tip").style.display = "none"; };
+      el.addEventListener("mousemove", show); el.addEventListener("focus", () => show()); el.addEventListener("mouseleave", hide); el.addEventListener("blur", hide);
+    });
+
+    // per site
+    const bySite = {};
+    calls.forEach((c) => { const k = c.site || "?"; (bySite[k] = bySite[k] || { calls: 0, usd: 0 }); bySite[k].calls++; bySite[k].usd += c.usd || 0; });
+    const rows = Object.entries(bySite).sort((a, b) => b[1].usd - a[1].usd);
+    const smax = Math.max(1e-9, ...rows.map(([, v]) => v.usd));
+    $("sites").innerHTML = rows.length ? rows.map(([k, v]) =>
+      `<div class="small">${esc(k)}</div><div class="track" title="${esc(k)}: ${usd(v.usd)}"><div class="fill" style="width:${(v.usd / smax) * 100}%"></div></div><div class="small num">${usd(v.usd)} · ${v.calls}×</div>`).join("")
+      : `<p class="muted small" style="grid-column:1/-1;margin:0">Geen aanroepen in deze periode.</p>`;
+
+    // met/zonder Claude per site, uit het logboek
+    const cols = ["voorfilter", "filters", "mijndak", "Claude", "gemaild"];
+    const st = {};
+    entries.forEach((e) => {
+      const s = st[e.site || "?"] = st[e.site || "?"] || { voorfilter: 0, filters: 0, mijndak: 0, Claude: 0, gemaild: 0 };
+      if (e.stage === "voorfilter") s.voorfilter++;
+      else if (e.stage === "filters") s.filters++;
+      else if (e.stage === "mijndak") s.mijndak++;
+      else if ((e.stage || "").startsWith("Claude")) s.Claude++;
+      if (e.result === "gemaild") s.gemaild++;
+    });
+    const srows = Object.entries(st).sort((a, b) => (b[1].Claude + b[1].filters) - (a[1].Claude + a[1].filters));
+    $("stages").innerHTML = `<thead><tr><th>Site</th><th class="r">Voorfilter</th><th class="r">Filters</th><th class="r">Niet passend (mijndak)</th><th class="r">Door Claude beoordeeld</th><th class="r">Gemaild</th></tr></thead><tbody>` +
+      (srows.length ? srows.map(([k, v]) => `<tr><td>${esc(k)}</td>${cols.map((c) => `<td class="r num">${v[c] || "·"}</td>`).join("")}</tr>`).join("")
+        : `<tr><td colspan="6" class="muted">Geen advertenties in deze periode.</td></tr>`) + "</tbody>";
+
+    // laatste aanroepen
+    const last = calls.slice(0, 40);
+    $("calls").innerHTML = `<thead><tr><th>Tijd</th><th>Waar</th><th>Site</th><th>Wat</th><th class="r">In</th><th class="r">Out</th><th class="r">Kosten</th><th class="r">Duur</th></tr></thead><tbody>` +
+      (last.length ? last.map((c) => `<tr><td class="num small">${new Date(c.t).toLocaleString("nl-NL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</td>` +
+        `<td class="small">${esc(c.where)}</td><td>${esc(c.site || "?")}</td><td class="small">${esc(PURPOSE[c.purpose] || c.purpose)} <span class="muted">${esc((c.model || "").replace("claude-", ""))}</span></td>` +
+        `<td class="r num">${tok((c.in || 0) + (c.cache_w || 0) + (c.cache_r || 0))}</td><td class="r num">${tok(c.out)}</td><td class="r num">${usd(c.usd)}</td><td class="r num">${nf((c.ms || 0) / 1000, 0)}s</td></tr>`).join("")
+        : `<tr><td colspan="8" class="muted">Nog geen aanroepen gelogd.</td></tr>`) + "</tbody>";
+  }
+
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
+    days = +b.dataset.days;
+    document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    render();
+  }));
+  load();
+  setInterval(load, 120000);
+})();
+</script>
+</body>
+</html>
