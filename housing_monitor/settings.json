@@ -67,6 +67,13 @@
       "type": "mijndak",
       "enabled": true,
       "search_url": "https://amsterdam.mijndak.nl/WoningOverzicht"
+    },
+    {
+      "name": "Huispedia",
+      "type": "generic",
+      "enabled": true,
+      "search_url": "https://huispedia.nl/huurwoningen/amsterdam/4_kamer?searchQueryState=%7B%22searchQuery%22%3A%22Amsterdam%22%2C%22pagination%22%3A%7B%22currentPage%22%3A0%2C%22skip%22%3A0%2C%22take%22%3A10%7D%2C%22options%22%3A%7B%22view%22%3A%22map%22%7D%2C%22map%22%3A%7B%22bounds%22%3A%7B%22sw_lon%22%3A4.7562469555603%2C%22sw_lat%22%3A52.28848068438381%2C%22ne_lon%22%3A5.028441864439031%2C%22ne_lat%22%3A52.41363426330062%7D%7D%2C%22filter%22%3A%7B%22status%22%3A%7B%22aot%22%3Afalse%2C%22fre%22%3Atrue%2C%22fso%22%3Afalse%2C%22fsr%22%3Afalse%2C%22fro%22%3Afalse%2C%22frr%22%3Afalse%2C%22fsa%22%3Afalse%2C%22ncl%22%3Afalse%2C%22ofb%22%3Afalse%2C%22pre%22%3Afalse%2C%22ren%22%3Afalse%2C%22sol%22%3Afalse%2C%22ubs%22%3Afalse%2C%22helper%22%3Afalse%7D%2C%22rooms%22%3A4%2C%22price%22%3A%7B%22min%22%3Anull%2C%22max%22%3A3000%7D%2C%22sort%22%3A%22created_at_desc%22%2C%22offered_since%22%3A0%7D%7D",
+      "link_contains": "/amsterdam/1"
     }
   ],
   "max_detail_fetches_per_run": 25,
