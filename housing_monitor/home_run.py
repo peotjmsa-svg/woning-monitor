@@ -241,8 +241,8 @@ def read_generic(client, html, url):
 
 
 def run_mijndak(name, client, seen, mark, record, sites_status, now):
-    """Mijndak via je account: passend én niet-passend aanbod, alleen woningen.
-    Geeft het aantal beoordeelde woningen."""
+    """Mijndak via je account: alleen woningen. Niet-passend aanbod wordt opgehaald (telt mee
+    in het overzicht) maar direct afgewezen. Geeft het aantal beoordeelde woningen."""
     import mijndak
     try:
         pubs = mijndak.fetch_publications()
@@ -269,6 +269,9 @@ def run_mijndak(name, client, seen, mark, record, sites_status, now):
         if not ok:
             record("scraper", name, keys, listing, "afgewezen", "filters", ", ".join(reasons))
             continue
+        if not d["passend"]:                # daar kun je niet op reageren; de link opent ook niet
+            record("scraper", name, keys, listing, "afgewezen", "mijndak", "niet passend voor je account")
+            continue
         checked += 1
         listing["other_details"] = d["description"]
         try:
@@ -276,8 +279,6 @@ def run_mijndak(name, client, seen, mark, record, sites_status, now):
         except (A.anthropic.APIError, RuntimeError) as e:
             log(f"  Claude-fout bij {d['name']}: {e} (volgende run opnieuw)")
             continue
-        if not d["passend"]:
-            warnings.append("mijndak vindt deze woning niet passend voor je profiel (check of je mag reageren)")
         if verdict["verdict"] == "geen fit":
             record("scraper", name, keys, listing, "afgewezen", "Claude (mijndak)", verdict["reason"])
         else:
