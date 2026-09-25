@@ -383,6 +383,9 @@ def save_state(state):
 # ---------------------------------------------------------------- main
 
 def run():
+    if not C.ENABLED:
+        print("Monitor staat uit (kill switch in de webapp): run overgeslagen, niets gedaan.")
+        return
     state = load_state()
     seen = state.setdefault("seen", {})
     now = datetime.now(timezone.utc).isoformat()

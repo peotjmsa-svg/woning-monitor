@@ -12,6 +12,7 @@ from pathlib import Path
 SETTINGS_FILE = Path(__file__).with_name("housing_monitor") / "settings.json"
 
 DEFAULTS = {
+    "enabled": True,                    # false = de hele monitor slaat elke run over (kill switch)
     "max_price": 3000,                  # euro per maand
     "min_rooms": 4,                     # totaal aantal kamers, incl. woonkamer
     # Gebieden binnen de ring (A10), op basis van de eerste 4 cijfers van de postcode.
@@ -79,6 +80,7 @@ def _merge(defaults, override):
 
 
 def _validate(s):
+    assert isinstance(s["enabled"], bool), "enabled moet true of false zijn"
     assert isinstance(s["max_price"], (int, float)) and s["max_price"] > 0, "max_price moet een getal > 0 zijn"
     assert isinstance(s["min_rooms"], int) and s["min_rooms"] >= 1, "min_rooms moet een geheel getal >= 1 zijn"
     for area, ranges in s["areas"].items():
@@ -102,6 +104,7 @@ def _validate(s):
 def _apply(s):
     g = globals()
     g["SETTINGS"] = s
+    g["ENABLED"] = bool(s["enabled"])
     g["MAX_PRICE"] = s["max_price"]
     g["MIN_ROOMS"] = s["min_rooms"]
     g["AREAS"] = {a: [tuple(r) for r in ranges] for a, ranges in s["areas"].items()}

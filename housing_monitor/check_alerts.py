@@ -622,6 +622,10 @@ def make_client():
 
 
 def run():
+    CONFIG.reload()                      # instellingen kunnen via de webapp veranderd zijn
+    if not CONFIG.ENABLED:
+        log("Monitor staat uit (kill switch in de webapp): run overgeslagen, niets gedaan.")
+        return
     missing = [k for k in ("GMAIL_ADDRESS", "GMAIL_APP_PASSWORD", "DESTINATION_EMAIL")
                if not os.environ.get(k)]
     if not (os.environ.get("CLAUDE_CODE_OAUTH_TOKEN") or os.environ.get("ANTHROPIC_API_KEY")):

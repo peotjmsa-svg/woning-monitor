@@ -343,6 +343,9 @@ def run(dry_run=False):
     CONFIG.reload()                    # instellingen kunnen via de webapp veranderd zijn
     if CONFIG.SETTINGS_ERROR:
         log(f"LET OP: {CONFIG.SETTINGS_ERROR}")
+    if not CONFIG.ENABLED:
+        log("Monitor staat uit (kill switch in de webapp): run overgeslagen, niets gedaan.")
+        return
 
     github_state = A.load_state()
     queue = A.load_json(A.QUEUE_FILE, {"items": []})

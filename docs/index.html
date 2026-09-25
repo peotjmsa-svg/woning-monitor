@@ -181,6 +181,10 @@
         <p class="small" style="margin:2px 0 0"><a href="usage.html">Claude-verbruik bekijken</a></p>
       </div>
     </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="small muted" id="kill-status">…</span>
+      <button class="btn danger" id="kill-switch" disabled>…</button>
+    </div>
     <div class="tabs" role="tablist" aria-label="Onderdelen">
       <button role="tab" id="tab-overview" aria-selected="true" aria-controls="view-overview">Overzicht</button>
       <button role="tab" id="tab-filters" aria-selected="false" aria-controls="view-filters">Filters</button>
@@ -400,6 +404,7 @@
       fillForms();
       renderOverview();
       renderSites();
+      renderKillSwitch();
       const fmt = (t) => t ? new Date(t).toLocaleString("nl-NL", { dateStyle: "short", timeStyle: "short" }) : "nog niet";
       $("updated").textContent = `GitHub: ${fmt(state.updated.github)} · pc thuis: ${fmt(state.updated.home)}`;
     } catch (e) {
@@ -630,6 +635,46 @@
     $("savebar").hidden = !dirty;
     if (dirty) { $("save-msg").textContent = "Niet-opgeslagen wijzigingen"; $("save").disabled = false; }
   }
+
+  // ---------------------------------------------------------------- kill switch
+  // Schakelt direct (los van de concept-wijzigingen/Opslaan hierboven): schrijft alleen het
+  // "enabled"-veld weg op basis van de laatst opgeslagen instellingen, zodat een half ingevuld
+  // concept elders op de pagina niet per ongeluk mee gepubliceerd wordt.
+  function renderKillSwitch() {
+    if (!state.settings) return;
+    const on = !!state.settings.enabled;
+    $("kill-switch").disabled = false;
+    $("kill-switch").textContent = on ? "Zet monitor uit" : "Zet monitor aan";
+    $("kill-switch").classList.toggle("danger", on);
+    $("kill-status").textContent = on
+      ? "Monitor staat aan"
+      : "Monitor staat uit — er wordt niets gecheckt of gemaild";
+  }
+  async function setEnabled(next) {
+    if (!state.settings) return;
+    if (!token()) {
+      $("kill-status").textContent = "Koppel eerst GitHub (onderaan de pagina) om te kunnen schakelen.";
+      $("token-box").open = true;
+      $("token").focus();
+      return;
+    }
+    $("kill-switch").disabled = true;
+    $("kill-status").textContent = next ? "Inschakelen…" : "Uitschakelen…";
+    try {
+      const s = JSON.parse(JSON.stringify(state.settings));
+      s.enabled = next;
+      await putSettings(s);
+      state.settings = s;
+      state.saved = JSON.stringify(s);
+      if (state.pending) state.pending.enabled = next;   // laat overige concept-wijzigingen ongemoeid
+      renderKillSwitch();
+      updateSavebar();
+    } catch (e) {
+      $("kill-status").textContent = e.message;
+      $("kill-switch").disabled = false;
+    }
+  }
+  $("kill-switch").addEventListener("click", () => setEnabled(!state.settings.enabled));
 
   // ---------------------------------------------------------------- sites
   function renderSites() {
