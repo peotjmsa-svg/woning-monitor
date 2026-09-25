@@ -12,12 +12,16 @@ Vanaf een thuisverbinding laat Cloudflare de advertenties wel door. Deze run:
 
 Sites van het type "builtin" (Pararius, Huurwoningen) hebben vaste code. Voor "generic"
 sites zoekt hij op de zoekpagina links met `link_contains` erin, en haalt Claude de
-gegevens uit de advertentie en beoordeelt die in één aanroep.
+gegevens uit de advertentie en beoordeelt die in één aanroep. Met een * in `link_contains`
+moet het hele pad kloppen, en met "render": true laadt een browser (Playwright) de
+zoekpagina, voor sites die hun aanbod pas met JavaScript tonen. Vesteda heeft een eigen
+type: de woningen komen uit hun zoek-API en worden daarna gelezen als een algemene site.
 
 Gebruik:
   python housing_monitor/home_run.py            # normale run
   python housing_monitor/home_run.py --dry-run  # niets mailen, opslaan of pushen
 """
+import fnmatch
 import os
 import re
 import subprocess
@@ -122,20 +126,73 @@ def page_text(html):
 def generic_links(html, base_url, contains):
     """Advertentielinks op een zoekpagina van een algemene site: links op dezelfde site
     waarin `contains` staat, met daarna nog iets in het pad (een id of straatnaam).
-    Zo vallen categoriepagina's als /appartement/huren/amsterdam/ af."""
+    Zo vallen categoriepagina's als /appartement/huren/amsterdam/ af. Met een * erin moet
+    het hele pad op het patroon passen, voor sites waar de plaats achteraan de link staat."""
     soup = BeautifulSoup(html, "html.parser")
     host = urlparse(base_url).netloc
     search = url_key(base_url)
     out = []
     for a in soup.find_all("a", href=True):
         p = urlparse(urljoin(base_url, a["href"]))
-        i = p.path.find(contains)
-        if p.netloc != host or i < 0 or not p.path[i + len(contains):].strip("/"):
+        if p.netloc != host:
             continue
+        if "*" in contains:
+            if not fnmatch.fnmatchcase(p.path.lower(), contains.lower()):
+                continue
+        else:
+            i = p.path.find(contains)
+            if i < 0 or not p.path[i + len(contains):].strip("/"):
+                continue
         url = f"{p.scheme}://{p.netloc}{p.path}"
         if url_key(url) != search and url not in out:
             out.append(url)
     return out
+
+
+def render(url):
+    """Zoekpagina via een browser, voor sites die hun aanbod met JavaScript laden."""
+    import time
+    from playwright.sync_api import Error as PlaywrightError, sync_playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        try:
+            page = browser.new_page(locale="nl-NL")
+            try:
+                page.goto(url, wait_until="networkidle", timeout=45_000)
+            except PlaywrightError:     # trackers houden het netwerk soms bezig; de pagina is er wel
+                pass
+            time.sleep(2)
+            return page.content()
+        finally:
+            browser.close()
+
+
+VESTEDA_API = "https://www.vesteda.com/api/units/search/facet"
+
+
+def vesteda_links(session):
+    """Vesteda: woningen in Amsterdam uit hun zoek-API. Alleen woningen die op prijs, kamers
+    en gebied passen gaan door naar Claude. Geeft (links, {url: gegevens uit de API})."""
+    body = {"filters": [], "latitude": 52.3676, "longitude": 4.9041, "place": "Amsterdam",
+            "placeObject": {"placeType": "1", "name": "Amsterdam"}, "placeType": 1, "radius": 10,
+            "sorting": 1, "priceFrom": 0, "priceTo": CONFIG.MAX_PRICE, "language": "nl"}
+    r = session.post(VESTEDA_API, json=body, timeout=30,
+                     headers=dict(M.HEADERS, **{"Content-Type": "application/json"}))
+    r.raise_for_status()
+    links, hints = [], {}
+    for units in (r.json().get("results", {}).get("objects") or {}).values():
+        for u in units:
+            pc = re.fullmatch(r"(\d{4})\s?([A-Za-z]{2})", u.get("postalCode") or "")
+            bedrooms = u.get("numberOfBedRooms")
+            detail = {"price": u.get("priceUnformatted"), "bedrooms": bedrooms, "size": u.get("size"),
+                      "rooms": bedrooms + 1 if bedrooms is not None else None,   # slaapkamers + woonkamer
+                      "postcode": f"{pc.group(1)} {pc.group(2).upper()}" if pc else None}
+            ok, _, _ = M.evaluate(dict(detail, description=""))
+            url = urljoin("https://www.vesteda.com", u.get("url") or "")
+            if ok and u.get("url") and url not in hints:
+                links.append(url)
+                hints[url] = detail
+    return links, hints
 
 
 def judge_builtin(client, detail):
@@ -294,12 +351,16 @@ def run(dry_run=False):
         if site["type"] == "mijndak":
             n_checked += run_mijndak(site["name"], client, seen, mark, record, sites_status, now)
             continue
-        name, generic = site["name"], site["type"] == "generic"
+        name, generic, hints = site["name"], site["type"] != "builtin", {}
         try:
-            html = M.fetch(session, site["search_url"])
-            links = (generic_links(html, site["search_url"], site["link_contains"]) if generic
-                     else [u for _, u in M.extract_listing_links(html, site["search_url"])])
-        except (M.Blocked, M.RequestException) as e:
+            if site["type"] == "vesteda":
+                links, hints = vesteda_links(session)
+            else:
+                html = render(site["search_url"]) if site.get("render") else M.fetch(session, site["search_url"])
+                links = (generic_links(html, site["search_url"], site["link_contains"]) if generic
+                         else [u for _, u in M.extract_listing_links(html, site["search_url"])])
+        except Exception as e:      # site stuk, geblokkeerd, of de browser start niet
+            log(f"{name}: zoekpagina mislukt: {e}")
             log(f"{name}: zoekpagina mislukt: {e}")
             sites_status[name] = {"t": now, "ok": False, "found": 0, "error": str(e)[:200]}
             M.polite_sleep()
@@ -307,6 +368,8 @@ def run(dry_run=False):
         new = [u for u in links if not seen([url_key(u)] + ([A.listing_id_from_url(u)] if not generic else []))]
         sites_status[name] = {"t": now, "ok": bool(links), "found": len(links), "new": len(new),
                               "error": None if links else "0 advertentielinks gevonden (klopt link_contains / de URL?)"}
+        if site["type"] == "vesteda":        # 0 is hier gewoon: alles viel af op prijs/kamers/gebied
+            sites_status[name].update(ok=True, error=None)
         log(f"{name}: {len(links)} advertenties op de zoekpagina, {len(new)} nieuw")
         M.polite_sleep()
 
@@ -325,6 +388,9 @@ def run(dry_run=False):
                     if detail is None:
                         mark(keys, "geen advertentie")
                         continue
+                    for k, v in hints.get(url, {}).items():    # Vesteda: aanvullen uit de API
+                        if detail.get(k) is None:
+                            detail[k] = v
                     keys += detail_keys(detail)
                     if seen(keys):
                         mark(keys, "al gezien")

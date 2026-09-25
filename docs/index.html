@@ -282,7 +282,7 @@
       <h2>Site toevoegen</h2>
       <div class="fields">
         <div><label for="new-name">Naam</label><input type="text" id="new-name" placeholder="bv. Kamernet"></div>
-        <div><label for="new-contains">Advertentielinks bevatten</label><input type="text" id="new-contains" placeholder="bv. /huren/amsterdam/"><p class="hint">Stukje van de link dat in elke advertentie staat. Open een advertentie en kijk naar het adres: bij <span class="num">site.nl/huren/amsterdam/123-straat</span> is dat <span class="num">/huren/amsterdam/</span>.</p></div>
+        <div><label for="new-contains">Advertentielinks bevatten</label><input type="text" id="new-contains" placeholder="bv. /huren/amsterdam/"><p class="hint">Stukje van de link dat in elke advertentie staat. Open een advertentie en kijk naar het adres: bij <span class="num">site.nl/huren/amsterdam/123-straat</span> is dat <span class="num">/huren/amsterdam/</span>. Staat de plaats achteraan, gebruik dan een <span class="num">*</span>: <span class="num">/wonen/object/*-amsterdam/</span>.</p></div>
       </div>
       <div style="margin-top:14px"><label for="new-url">Zoek-URL (met je filters, nieuwste eerst)</label><input type="url" id="new-url" placeholder="https://…"></div>
       <div style="margin-top:14px"><button class="btn" id="add-site">Toevoegen</button> <span id="add-site-msg" class="small"></span></div>
@@ -644,7 +644,7 @@
       const div = document.createElement("div");
       div.className = "site";
       div.innerHTML =
-        `<div class="site-head"><div><span class="name">${esc(site.name)}</span> <span class="pill ${site.type === "generic" ? "warn" : "ok"}">${{ builtin: "vaste code", generic: "Claude leest", mijndak: "met je account" }[site.type] || site.type}</span></div>` +
+        `<div class="site-head"><div><span class="name">${esc(site.name)}</span> <span class="pill ${site.type === "generic" ? "warn" : "ok"}">${{ builtin: "vaste code", generic: site.render ? "Claude leest, via browser" : "Claude leest", mijndak: "met je account", vesteda: "via Vesteda-API" }[site.type] || site.type}</span></div>` +
         `<div class="check" style="padding:0"><input type="checkbox" id="en${i}" ${site.enabled !== false ? "checked" : ""}><span><label for="en${i}" style="display:inline;margin:0">Actief</label></span></div></div>` +
         status +
         `<div><label for="su${i}">Zoek-URL</label><input type="url" id="su${i}" value="${esc(site.search_url)}"></div>` +

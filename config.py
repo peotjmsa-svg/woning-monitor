@@ -49,7 +49,10 @@ DEFAULTS = {
     # Zoekpagina's voor de pc thuis. Alleen pagina 1 wordt gelezen, dus sorteer op nieuwste.
     # type "builtin": vaste code voor Pararius/Huurwoningen; "generic": elke andere site,
     # Claude leest de advertentie (link_contains: tekst die in elke advertentielink staat);
-    # "mijndak": amsterdam.mijndak.nl met je account (inlog in .env op de pc).
+    # "mijndak": amsterdam.mijndak.nl met je account (inlog in .env op de pc);
+    # "vesteda": vesteda.com via hun zoek-API (search_url = hun zoekpagina, alleen ter info).
+    # Een * in link_contains matcht het hele pad (bv. "/wonen/object/*-amsterdam/"), en
+    # "render": true laadt de zoekpagina in een browser voor sites die JavaScript nodig hebben.
     "sites": [
         {"name": "Pararius", "type": "builtin", "enabled": True,
          "search_url": "https://www.pararius.nl/huurwoningen/amsterdam/0-3000/4-aantalkamers"},
@@ -89,7 +92,7 @@ def _validate(s):
     assert all(isinstance(x, str) and x.strip() for x in s["alert_senders"]), "ongeldige alert_senders"
     for site in s["sites"]:
         assert site.get("name") and site.get("search_url", "").startswith("http"), f"ongeldige site: {site}"
-        assert site.get("type") in ("builtin", "generic", "mijndak"), f"onbekend sitetype: {site.get('type')}"
+        assert site.get("type") in ("builtin", "generic", "mijndak", "vesteda"), f"onbekend sitetype: {site.get('type')}"
         if site["type"] == "generic":
             assert site.get("link_contains"), f"{site['name']}: link_contains ontbreekt"
     assert isinstance(s["max_detail_fetches_per_run"], int) and s["max_detail_fetches_per_run"] > 0
