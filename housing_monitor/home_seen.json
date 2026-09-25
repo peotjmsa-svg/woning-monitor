@@ -1188,6 +1188,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "pc:1025GD:2000": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
   "pc:1031JB:1100": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -1211,6 +1215,10 @@
   "pc:1032LB:1527": {
    "result": "afgewezen",
    "t": "2026-09-24T20:37:45.891954+00:00"
+  },
+  "pc:1033DB:3000": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
   },
   "pc:1033GR:1161": {
    "result": "afgewezen",
@@ -1288,6 +1296,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "pc:1056DN:2975": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
   "pc:1056NM:1228": {
    "result": "gemaild",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -1300,6 +1312,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
   },
+  "pc:1058GP:2500": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
   "pc:1058HN:943": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -1308,6 +1324,10 @@
    "result": "al gezien",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "pc:1060SM:2975": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
   "pc:1061AR:971": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -1315,6 +1335,10 @@
   "pc:1061ME:2525": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "pc:1061SC:2853": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
   },
   "pc:1061XG:959": {
    "result": "afgewezen",
@@ -1500,6 +1524,14 @@
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
   },
+  "pc:1078XA:2600": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "pc:1079WR:2345": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
   "pc:1079ZA:774": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -1648,6 +1680,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
   },
+  "pc:1102RR:2500": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
   "pc:1102RR:2650": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
@@ -1691,6 +1727,10 @@
   "pc:1106TD:1055": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
+  },
+  "pc:1106ZM:2250": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
   },
   "pc:1107KN:1063": {
    "result": "afgewezen",
@@ -1963,6 +2003,46 @@
   "pc:1566JT:1038": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1025gd/het-laagt/97": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1033db/hellingbaan/64": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1056dn/marco-polostraat/281-3": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1058gp/surinameplein/18-1": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1060sm/pennyhof/18": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1061sc/piet-mondriaanplein/16": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1078xa/molenbeekstraat/17-1": {
+   "result": "gemaild",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1079wr/kribbestraat/4-1": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1102rr/bijlmerdreef/685": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
+  },
+  "url:huispedia.nl/amsterdam/1106zm/hendrik-hosstraat/85": {
+   "result": "afgewezen",
+   "t": "2026-09-25T07:37:45.901375+00:00"
   },
   "url:ikwilhuren.nu/object/amsterdam-1016xp-160-nieuwe-passeerdersstraat-36ae7f915dd1e413319763bc615060b6": {
    "result": "afgewezen",
