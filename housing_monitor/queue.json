@@ -1,3 +1,26 @@
 {
- "items": []
+ "items": [
+  {
+   "keys": [
+    "pc:1013GM:1228",
+    "addr:haarlemmerhouttuinen1013gmcentrumwest:1228"
+   ],
+   "listing": {
+    "address": "Haarlemmer Houttuinen, 1013GM (Centrum-West)",
+    "city": "Amsterdam",
+    "other_details": "86 m² · 4 kamers · Appartement · Bouwjaar 1982",
+    "price_eur": 1228,
+    "rooms": 4,
+    "size_m2": 86,
+    "url": "http://track.huurwoningen.nl/ls/click?upn=u001.oxVdrKqP5m2pyDGSL9KjB6kbMW9ajMVQQtMs533-2FO7wI4dJwAx-2FLO346guhkQ6BNAfZBaVnTkDGbX-2FJvddsa8ZGtyA6F15ZqlzSnsHkHW0w-2FD60jJWLXgJdPiiqODalIR1x56BZddljPKLXb8CWcrzHU88mHQ8Zb3jq3FZ-2F-2FGt7qXOZmRHtZ06MhMtnuOKM2TSuydkrvlr99q7k5bF73DCQ5A0lDyAB8h0IH-2B-2B-2F9A2YHX7B9c6bRst-2BdCZgDUtw64iFZ9BlVzhNxmQjKF5MJ8Q-3D-3D-hgC_YwGuGN2zlWl7ku6m1C1rpV7CiZIleKU9H8-2FD6MOJoQD45OfTr6cfqFEJVahWrn-2B3W8EVvxeqR-2B0DFXcUiQXglK535eJMfv5arUvjrLoGdwE8k642H6hQ1J7td-2FUgQG5sItcA2UARX-2BgQFjTUi2HKNpuKvM2Wh1UmDOGLS3fym9RNrWohHnV4w9AqlGjzm75mxw1WMHAou0cuKvwIpfWdozdLrAoBt6RylDgXoTUU4Ex9ETqLlw9G-2B9uU3Ulqp-2FXRj6fqgiLRJgmgmSLwKHSNclqaUy6jiRzEiwf8z0mSrU-2F-2BWEDETc1CEDYMPRG4GpY18CIYqUQiHYKE56WP1D8xV7IegjCgYhY-2BD03Ie-2BDujYcDsSZRLOpbHNfNmVE0qkVNZQiNw3PM3x-2BZ9M2p8vUYfdtHrpfPKpb65oIrCUIsHAWBzR4omiH1A6AVkpA6jG2YAFD-2FY8N3VKq-2BeP5pdPh1df5Xjk5uI0Hzu3-2BpAHOaDHWOzAk5dylQ-2BHk1Vl9KpTRjVXjd-2F-2BxbJKRfQC1eewsvtRVBLHt0kmYoXH58TC-2FboEOzvpptLEL5GfManYCDVjRaG-2F6Xq-2F1PogAfUD7H9dAQEXbSxW4-2FhFoB6ffmQ4X2xpTlyrpSEC6yh6B1Q8n9rTdlxdr7MkogcE7HBNxNOgafcw-3D-3D"
+   },
+   "queued_at": "2026-09-25T05:25:32.015919+00:00",
+   "site": "Huurwoningen",
+   "verdict": {
+    "reason": "Perfecte locatie in Centrum-West (binnen de ring) voor €1228 met 4 kamers. Alle zichtbare criteria worden gehaald, geen rode vlaggen en zeer goede prijs-kwaliteit verhouding.",
+    "risks": [],
+    "verdict": "fit"
+   }
+  }
+ ]
 }

@@ -1,5 +1,36 @@
 {
- "entries": [],
+ "entries": [
+  {
+   "area": "Centrum",
+   "name": "Haarlemmer Houttuinen, 1013GM (Centrum-West)",
+   "postcode": "1013GM",
+   "price": 1228,
+   "reason": "Perfecte locatie in Centrum-West (binnen de ring) voor €1228 met 4 kamers. Alle zichtbare criteria worden gehaald, geen rode vlaggen en zeer goede prijs-kwaliteit verhouding.",
+   "result": "wachtlijst",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 86,
+   "source": "mail",
+   "stage": "Claude (mail)",
+   "t": "2026-09-25T05:25:57+00:00",
+   "url": "http://track.huurwoningen.nl/ls/click?upn=u001.oxVdrKqP5m2pyDGSL9KjB6kbMW9ajMVQQtMs533-2FO7wI4dJwAx-2FLO346guhkQ6BNAfZBaVnTkDGbX-2FJvddsa8ZGtyA6F15ZqlzSnsHkHW0w-2FD60jJWLXgJdPiiqODalIR1x56BZddljPKLXb8CWcrzHU88mHQ8Zb3jq3FZ-2F-2FGt7qXOZmRHtZ06MhMtnuOKM2TSuydkrvlr99q7k5bF73DCQ5A0lDyAB8h0IH-2B-2B-2F9A2YHX7B9c6bRst-2BdCZgDUtw64iFZ9BlVzhNxmQjKF5MJ8Q-3D-3D-hgC_YwGuGN2zlWl7ku6m1C1rpV7CiZIleKU9H8-2FD6MOJoQD45OfTr6cfqFEJVahWrn-2B3W8EVvxeqR-2B0DFXcUiQXglK535eJMfv5arUvjrLoGdwE8k642H6hQ1J7td-2FUgQG5sItcA2UARX-2BgQFjTUi2HKNpuKvM2Wh1UmDOGLS3fym9RNrWohHnV4w9AqlGjzm75mxw1WMHAou0cuKvwIpfWdozdLrAoBt6RylDgXoTUU4Ex9ETqLlw9G-2B9uU3Ulqp-2FXRj6fqgiLRJgmgmSLwKHSNclqaUy6jiRzEiwf8z0mSrU-2F-2BWEDETc1CEDYMPRG4GpY18CIYqUQiHYKE56WP1D8xV7IegjCgYhY-2BD03Ie-2BDujYcDsSZRLOpbHNfNmVE0qkVNZQiNw3PM3x-2BZ9M2p8vUYfdtHrpfPKpb65oIrCUIsHAWBzR4omiH1A6AVkpA6jG2YAFD-2FY8N3VKq-2BeP5pdPh1df5Xjk5uI0Hzu3-2BpAHOaDHWOzAk5dylQ-2BHk1Vl9KpTRjVXjd-2F-2BxbJKRfQC1eewsvtRVBLHt0kmYoXH58TC-2FboEOzvpptLEL5GfManYCDVjRaG-2F6Xq-2F1PogAfUD7H9dAQEXbSxW4-2FhFoB6ffmQ4X2xpTlyrpSEC6yh6B1Q8n9rTdlxdr7MkogcE7HBNxNOgafcw-3D-3D"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "Willeskopstraat, 1107KN (Gaasperdam)",
+   "postcode": "1107KN",
+   "price": 1042,
+   "reason": "buiten de ring (1107KN)",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Huurwoningen",
+   "size": 71,
+   "source": "mail",
+   "stage": "voorfilter",
+   "t": "2026-09-25T05:25:57+00:00",
+   "url": "http://track.huurwoningen.nl/ls/click?upn=u001.oxVdrKqP5m2pyDGSL9KjB6kbMW9ajMVQQtMs533-2FO7wI4dJwAx-2FLO346guhkQ6BN6g7JkR-2BSccElUDNrjrJBnsvuAcsi9P7J-2BOW2YyzurDRUIEwR2dFQ0UtpDMWQTi63VHOSvWXlubM-2F3dFmB50sRbBRaORfF291FCo-2Buv3iCXMqcd-2B5-2FqWLuApO1yEI-2Bt-2BBef8MHoAErvDsscpVhelt9Z6c-2BPtDE4XYd0szIiH2IFVaiQ1dschFoz6Y1uKSIT-2FE-2BR8LdIEfMjIHnZXOndNj1w-3D-3DpmFA_YwGuGN2zlWl7ku6m1C1rpV7CiZIleKU9H8-2FD6MOJoQD45OfTr6cfqFEJVahWrn-2B39Be1xlYZb4ZPb1Ltq03BqX8LnbecHzVm-2BKGCY33NRJHT4PBpmOkY8txCabG2UGwCDLHnt1u9oMhoDK7jsdnAJqboXMyjUDsvyY-2BT-2B7o9vR6CLkFQbcvq4ghwywrvtcbYHkDFKaMKslcZKQyIa1BJPwxIL6eT-2FucoYKQ0JWDjt-2BO2OTZqh3oxiP7PuK-2BQm-2BJPvNKCCgdJmMIXeN6ceozg0jwdgEi3yo2cC2IUs8ELejFw-2FHhZs1bIOzSWIbfVrfxrEXlxpAw8UXQG2DWt9mpmgVRwA9z53c-2Bb9k-2Bmg5jKgnCT-2B4Ql4UAjBI22T-2BM-2BgQ3oyqBr6xLyqPaIXOO2is3EtaTm5FZmyxJIm2vjvbDmiPcjsrY0WbUpPsJbHxg0NPv6xx-2B-2BsV1y7FdRqHz3a6cBBIpTPVPA5nfwHQZEj531T4quPI-2FQU7CRQZ8yU-2BdbejPjKG-2BEcNAGac55gWR2PNoM-2FnKMOawjJM4-2F3iMFR1dOvYPwV6fzIncOcKvrLqUVmfYZfcpBJzkuonFyKdWK-2FfJCzpmp3U0zETGCIAWbEO7aac6ZbZ34oNZPF2boYtYSkFWrBu8Qjmqym4pAwoOH-2BAkWGA-3D-3D"
+  }
+ ],
  "sites": {},
- "updated": "2026-09-25T00:33:42+00:00"
+ "updated": "2026-09-25T05:25:57+00:00"
 }
