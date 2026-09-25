@@ -1104,6 +1104,10 @@
    "result": "afgewezen",
    "t": "2026-09-25T03:08:42.510382+00:00"
   },
+  "pc:1016AL:3000": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
   "pc:1016LA:726": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -1134,11 +1138,15 @@
   },
   "pc:1018HS:2950": {
    "result": "al gezien",
-   "t": "2026-09-24T19:07:45.603792+00:00"
+   "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "pc:1018JX:796": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
+  },
+  "pc:1018KZ:1431": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "pc:1018KZ:3000": {
    "result": "afgewezen",
@@ -1283,6 +1291,10 @@
   "pc:1053KX:2975": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "pc:1054DH:1750": {
+   "result": "gemaild",
+   "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "pc:1054MD:2600": {
    "result": "al gezien",
@@ -1456,6 +1468,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
   },
+  "pc:1072TD:2550": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
   "pc:1072TX:724": {
    "result": "afgewezen",
    "t": "2026-09-25T03:08:42.510382+00:00"
@@ -1467,6 +1483,10 @@
   "pc:1073GX:1409": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
+  },
+  "pc:1073GX:1659": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "pc:1073HD:944": {
    "result": "afgewezen",
@@ -1644,17 +1664,29 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
   },
+  "pc:1096CJ:2320": {
+   "result": "gemaild",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
   "pc:1096HL:3000": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "pc:1097HZ:2450": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "pc:1097JE:2020": {
+   "result": "gemaild",
+   "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "pc:1097JN:758": {
    "result": "afgewezen",
    "t": "2026-09-25T03:08:42.510382+00:00"
   },
   "pc:1097KB:2600": {
-   "result": "afgewezen",
-   "t": "2026-09-24T19:07:45.603792+00:00"
+   "result": "al gezien",
+   "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "pc:1097WJ:1237": {
    "result": "afgewezen",
@@ -2080,6 +2112,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:37:45.891954+00:00"
   },
+  "url:ikwilhuren.nu/object/amsterdam-1067cp-528-dr-h-colijnstraat-e908b12ccfa112209dcebc68390e3419": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
   "url:ikwilhuren.nu/object/amsterdam-1082mt-506-george-gershwinlaan-88e579b2cfa560d413ddbaab0d36f0ec": {
    "result": "afgewezen",
    "t": "2026-09-24T20:37:45.891954+00:00"
@@ -2092,6 +2128,14 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:37:45.891954+00:00"
   },
+  "url:vbtverhuurmakelaars.nl/woning/amsterdam-fibigerstraat-16": {
+   "result": "al gezien",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/bijlmerdreef-981-37": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
   "url:www.123wonen.nl/huur/amsterdam/appartement/bosrankstraat-3615-14": {
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
@@ -2099,6 +2143,18 @@
   "url:www.123wonen.nl/huur/amsterdam/appartement/dostojevskisingel-984-37": {
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/ecuplein-3596-14": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/jan+evertsenstraat-3585-14": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/osdorpplein-3594-14": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "url:www.123wonen.nl/huur/amsterdam/appartement/ottho+heldringstraat-989-37": {
    "result": "afgewezen",
@@ -2112,9 +2168,57 @@
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
   },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/waterlandplein-3592-14": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/eengezinswoning/hendrik+hosstraat-969-37": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
   "url:www.123wonen.nl/huur/amsterdam/hoekwoning/schaarbeekstraat-3617-14": {
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-driekoningenstraat-13-1/44510918": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-fritz-dietrich-kahlenbergstraat-44-d/44516378": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-nicolaas-anslijnstraat-269/80972822": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-nieuwe-osdorpergracht-273/80973837": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-touwbaan-40/44516707": {
+   "result": "al gezien",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-van-ostadestraat-126-h/44510121": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-vrijburg-7/80972371": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/huis-geerdinkhof-306/80972282": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/huis-kortenakenstraat-15/44516800": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/huis-la-meye-66/80970342": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "url:www.huurwoningen.nl/huren/amsterdam/2effc3b5/dorus-rijkershof": {
    "result": "afgewezen",
@@ -2167,6 +2271,46 @@
   "url:www.pararius.nl/appartement-te-huur/amsterdam/325e819d/formosastraat": {
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.rebogroep.nl/nl/aanbod/0ec1f34c-cc0e-4b2c-ba66-626f236138ed-voc-kade-232-1018-lg-amsterdam": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.rebogroep.nl/nl/aanbod/26bbe833-40d0-4110-bead-fab73c9a6b66-willem-parelstraat-423-425-1018-kz-amsterdam": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.rebogroep.nl/nl/aanbod/4eba74dd-add2-4a7f-a0ec-b75aeeb6119b-david-ricardostraat-286-1066-lh-amsterdam": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.rebogroep.nl/nl/aanbod/5042fc7a-a6a4-4109-ae04-d29febfce0b7-eerste-helmersstraat-30-a-1054-dh-amsterdam": {
+   "result": "gemaild",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.rebogroep.nl/nl/aanbod/63ccf0a6-39d2-4278-9103-da82f1c3495f-david-ricardostraat-552-1066-lh-amsterdam": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.rebogroep.nl/nl/aanbod/7135a91a-6198-434a-97c5-4394d733b1db-lutmastraat-175-g-1073-gx-amsterdam": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.rebogroep.nl/nl/aanbod/80e58a6d-acb5-4e2d-91d0-880d1e4b5456-osdorper-ban-897-1069-ga-amsterdam": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.vesteda.com/nl/huurwoningen-amsterdam/de-enter/joan-muyskenweg-6g7-amsterdam-39284": {
+   "result": "gemaild",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.vesteda.com/nl/huurwoningen-amsterdam/julianapark-egw/benno-stokvisstraat-12-amsterdam-15707": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.vesteda.com/nl/huurwoningen-amsterdam/julianapark-mgw/bart-de-ligtstraat-52-amsterdam-13474": {
+   "result": "gemaild",
+   "t": "2026-09-25T10:37:46.100042+00:00"
   }
  }
 }
