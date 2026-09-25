@@ -3044,15 +3044,134 @@
    "stage": "filters",
    "t": "2026-09-25T07:45:30+00:00",
    "url": "https://huispedia.nl/amsterdam/1025gd/het-laagt/97"
+  },
+  {
+   "area": "Oost",
+   "name": "Appartement Formosastraat in Amsterdam, 1094 SW (Oost)",
+   "postcode": "1094SW",
+   "price": 2750,
+   "reason": "Oost en geen topdeal (€688/kamer), garantsteller niet toegestaan",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Pararius",
+   "size": 73,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-25T09:22:50+00:00",
+   "url": "https://www.pararius.nl/appartement-te-huur/amsterdam/325e819d/formosastraat"
+  },
+  {
+   "area": null,
+   "name": "Schipluidenlaan,  (?)",
+   "postcode": null,
+   "price": 2300,
+   "reason": "te weinig kamers (2)",
+   "result": "afgewezen",
+   "rooms": 2,
+   "site": "123Wonen",
+   "size": 53,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-25T09:24:39+00:00",
+   "url": "https://www.123wonen.nl/huur/amsterdam/appartement/schipluidenlaan-3618-14"
+  },
+  {
+   "area": null,
+   "name": "Schaarbeekstraat,  (?)",
+   "postcode": null,
+   "price": 2750,
+   "reason": "De woning ligt in Nieuw-Sloten (Nieuw-West), buiten de A10-ring, en voldoet daarom niet aan het locatiecriterium. Prijs (€2.750) en aantal kamers (4) zijn wel goed.",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "123Wonen",
+   "size": 125,
+   "source": "scraper",
+   "stage": "Claude (advertentie)",
+   "t": "2026-09-25T09:25:19+00:00",
+   "url": "https://www.123wonen.nl/huur/amsterdam/hoekwoning/schaarbeekstraat-3617-14"
+  },
+  {
+   "area": null,
+   "name": "Bosrankstraat,  (?)",
+   "postcode": null,
+   "price": 2600,
+   "reason": "te weinig kamers (3)",
+   "result": "afgewezen",
+   "rooms": 3,
+   "site": "123Wonen",
+   "size": 72,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-25T09:25:52+00:00",
+   "url": "https://www.123wonen.nl/huur/amsterdam/appartement/bosrankstraat-3615-14"
+  },
+  {
+   "area": null,
+   "name": "Ottho Heldringstraat,  (?)",
+   "postcode": null,
+   "price": 2450,
+   "reason": "te weinig kamers (3)",
+   "result": "afgewezen",
+   "rooms": 3,
+   "site": "123Wonen",
+   "size": 118,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-25T09:26:26+00:00",
+   "url": "https://www.123wonen.nl/huur/amsterdam/appartement/ottho+heldringstraat-989-37"
+  },
+  {
+   "area": null,
+   "name": "Dostojevskisingel 984-37,  (?)",
+   "postcode": null,
+   "price": 1350,
+   "reason": "te weinig kamers (2)",
+   "result": "afgewezen",
+   "rooms": 2,
+   "site": "123Wonen",
+   "size": 45,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-25T09:27:07+00:00",
+   "url": "https://www.123wonen.nl/huur/amsterdam/appartement/dostojevskisingel-984-37"
+  },
+  {
+   "area": null,
+   "name": "Van Boshuizenstraat,  (?)",
+   "postcode": null,
+   "price": 2250,
+   "reason": "te weinig kamers (2)",
+   "result": "afgewezen",
+   "rooms": 2,
+   "site": "123Wonen",
+   "size": null,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-25T09:27:43+00:00",
+   "url": "https://www.123wonen.nl/huur/amsterdam/appartement/van+boshuizenstraat-968-37"
   }
  ],
  "sites": {
+  "123Wonen": {
+   "error": null,
+   "found": 12,
+   "new": 12,
+   "ok": true,
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "Funda": {
+   "error": null,
+   "found": 15,
+   "new": 15,
+   "ok": true,
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
   "Huispedia": {
    "error": null,
    "found": 10,
-   "new": 10,
+   "new": 0,
    "ok": true,
-   "t": "2026-09-25T07:37:45.901375+00:00"
+   "t": "2026-09-25T09:22:46.324794+00:00"
   },
   "Huurwoningen": {
    "error": null,
@@ -3066,22 +3185,50 @@
    "found": 10,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T07:37:45.901375+00:00"
+   "t": "2026-09-25T09:22:46.324794+00:00"
   },
   "Mijndak": {
    "error": null,
    "found": 170,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T07:37:45.901375+00:00"
+   "t": "2026-09-25T09:22:46.324794+00:00"
   },
   "Pararius": {
    "error": null,
-   "found": 30,
-   "new": 0,
+   "found": 31,
+   "new": 1,
    "ok": true,
-   "t": "2026-09-25T07:37:45.901375+00:00"
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "REBO": {
+   "error": null,
+   "found": 7,
+   "new": 7,
+   "ok": true,
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "Rotsvast": {
+   "error": "0 advertentielinks gevonden (klopt link_contains / de URL?)",
+   "found": 0,
+   "new": 0,
+   "ok": false,
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "VB&T": {
+   "error": null,
+   "found": 1,
+   "new": 1,
+   "ok": true,
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "Vesteda": {
+   "error": null,
+   "found": 3,
+   "new": 3,
+   "ok": true,
+   "t": "2026-09-25T09:22:46.324794+00:00"
   }
  },
- "updated": "2026-09-25T07:45:35+00:00"
+ "updated": "2026-09-25T09:30:39+00:00"
 }

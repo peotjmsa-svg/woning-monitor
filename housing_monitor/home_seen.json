@@ -40,6 +40,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:22:45.670638+00:00"
   },
+  "325e819d": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
   "4246f9cf": {
    "result": "gemaild",
    "t": "2026-09-25T07:09:11.495154+00:00"
@@ -1616,6 +1620,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
   },
+  "pc:1094SW:2750": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
   "pc:1095AN:1260": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -2084,6 +2092,30 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:37:45.891954+00:00"
   },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/bosrankstraat-3615-14": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/dostojevskisingel-984-37": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/ottho+heldringstraat-989-37": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/schipluidenlaan-3618-14": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/appartement/van+boshuizenstraat-968-37": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.123wonen.nl/huur/amsterdam/hoekwoning/schaarbeekstraat-3617-14": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
+  },
   "url:www.huurwoningen.nl/huren/amsterdam/2effc3b5/dorus-rijkershof": {
    "result": "afgewezen",
    "t": "2026-09-24T19:22:45.670638+00:00"
@@ -2131,6 +2163,10 @@
   "url:www.huurwoningen.nl/huren/amsterdam/ef14df05/victorieplein": {
    "result": "afgewezen",
    "t": "2026-09-24T19:22:45.670638+00:00"
+  },
+  "url:www.pararius.nl/appartement-te-huur/amsterdam/325e819d/formosastraat": {
+   "result": "afgewezen",
+   "t": "2026-09-25T09:22:46.324794+00:00"
   }
  }
 }
