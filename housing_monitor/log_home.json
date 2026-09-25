@@ -3569,6 +3569,21 @@
    "stage": "voorfilter",
    "t": "2026-09-25T10:54:06+00:00",
    "url": "https://www.funda.nl/detail/huur/amsterdam/appartement-mezquitalaan-72/80968376/"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "https://www.funda.nl/detail/huur/amsterdam/huis-schaarbeekstraat-24/80975816/, 1066 WH (?)",
+   "postcode": "1066WH",
+   "price": 2750,
+   "reason": "buiten de ring (1066 WH)",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Funda",
+   "size": null,
+   "source": "scraper",
+   "stage": "voorfilter",
+   "t": "2026-09-25T11:53:27+00:00",
+   "url": "https://www.funda.nl/detail/huur/amsterdam/huis-schaarbeekstraat-24/80975816/"
   }
  ],
  "sites": {
@@ -3577,21 +3592,21 @@
    "found": 12,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "Funda": {
    "error": null,
    "found": 15,
-   "new": 0,
+   "new": 1,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "Huispedia": {
    "error": null,
    "found": 10,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "Huurwoningen": {
    "error": null,
@@ -3605,50 +3620,50 @@
    "found": 10,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "Mijndak": {
    "error": null,
    "found": 170,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "Pararius": {
    "error": null,
    "found": 31,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "REBO": {
    "error": null,
    "found": 7,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "Rotsvast": {
    "error": "0 advertentielinks gevonden (klopt link_contains / de URL?)",
    "found": 0,
    "new": 0,
    "ok": false,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "VB&T": {
    "error": null,
    "found": 1,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   },
   "Vesteda": {
    "error": null,
    "found": 3,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T11:37:45.551258+00:00"
+   "t": "2026-09-25T11:52:45.499389+00:00"
   }
  },
- "updated": "2026-09-25T11:39:27+00:00"
+ "updated": "2026-09-25T11:54:29+00:00"
 }
