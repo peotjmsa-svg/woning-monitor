@@ -168,6 +168,58 @@
 "usd": 0.02188,
 "ms": 12987,
 "chars": 6662
+},
+{
+"t": "2026-09-25T10:53:37+00:00",
+"site": "Funda",
+"purpose": "read_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 309,
+"cache_w": 2122,
+"cache_r": 1339,
+"usd": 0.01778,
+"ms": 6133,
+"chars": 5746
+},
+{
+"t": "2026-09-25T10:53:45+00:00",
+"site": "Funda",
+"purpose": "read_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 306,
+"cache_w": 2464,
+"cache_r": 1339,
+"usd": 0.01978,
+"ms": 6421,
+"chars": 7309
+},
+{
+"t": "2026-09-25T10:53:59+00:00",
+"site": "Funda",
+"purpose": "read_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 335,
+"cache_w": 2351,
+"cache_r": 1339,
+"usd": 0.01954,
+"ms": 7400,
+"chars": 6693
+},
+{
+"t": "2026-09-25T10:54:06+00:00",
+"site": "Funda",
+"purpose": "read_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 320,
+"cache_w": 2336,
+"cache_r": 1339,
+"usd": 0.01923,
+"ms": 5225,
+"chars": 7271
 }
 ]
 }

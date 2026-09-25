@@ -1289,8 +1289,8 @@
    "t": "2026-09-25T03:08:42.510382+00:00"
   },
   "pc:1053KX:2975": {
-   "result": "afgewezen",
-   "t": "2026-09-24T18:55:23.250104+00:00"
+   "result": "al gezien",
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "pc:1054DH:1750": {
    "result": "gemaild",
@@ -1445,16 +1445,16 @@
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
   "pc:1071SM:3000": {
-   "result": "match",
-   "t": "2026-09-24T19:07:45.603792+00:00"
+   "result": "al gezien",
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "pc:1071XA:2750": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
   "pc:1071XB:2750": {
-   "result": "afgewezen",
-   "t": "2026-09-24T18:55:23.250104+00:00"
+   "result": "al gezien",
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "pc:1072BB:721": {
    "result": "afgewezen",
@@ -1669,8 +1669,8 @@
    "t": "2026-09-25T10:37:46.100042+00:00"
   },
   "pc:1096HL:3000": {
-   "result": "afgewezen",
-   "t": "2026-09-24T18:55:23.250104+00:00"
+   "result": "al gezien",
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "pc:1097HZ:2450": {
    "result": "afgewezen",
@@ -2128,6 +2128,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:37:45.891954+00:00"
   },
+  "url:ikwilhuren.nu/object/amsterdam-1098xa-535-carolina-macgillavrylaan-a51a98e3bec75423cbd70352049410bf": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:52:45.644219+00:00"
+  },
   "url:vbtverhuurmakelaars.nl/woning/amsterdam-fibigerstraat-16": {
    "result": "al gezien",
    "t": "2026-09-25T10:37:46.100042+00:00"
@@ -2180,6 +2184,14 @@
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
   },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-amstelboulevard-180/44516878": {
+   "result": "al gezien",
+   "t": "2026-09-25T10:52:45.644219+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-bilderdijkstraat-88-1/44516101": {
+   "result": "al gezien",
+   "t": "2026-09-25T10:52:45.644219+00:00"
+  },
   "url:www.funda.nl/detail/huur/amsterdam/appartement-driekoningenstraat-13-1/44510918": {
    "result": "afgewezen",
    "t": "2026-09-25T10:37:46.100042+00:00"
@@ -2188,6 +2200,10 @@
    "result": "afgewezen",
    "t": "2026-09-25T10:37:46.100042+00:00"
   },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-mezquitalaan-72/80968376": {
+   "result": "afgewezen",
+   "t": "2026-09-25T10:52:45.644219+00:00"
+  },
   "url:www.funda.nl/detail/huur/amsterdam/appartement-nicolaas-anslijnstraat-269/80972822": {
    "result": "afgewezen",
    "t": "2026-09-25T10:37:46.100042+00:00"
@@ -2195,6 +2211,14 @@
   "url:www.funda.nl/detail/huur/amsterdam/appartement-nieuwe-osdorpergracht-273/80973837": {
    "result": "afgewezen",
    "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-richard-holstraat-10-2/44515006": {
+   "result": "al gezien",
+   "t": "2026-09-25T10:52:45.644219+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-ruysdaelstraat-59-3/80970490": {
+   "result": "al gezien",
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "url:www.funda.nl/detail/huur/amsterdam/appartement-touwbaan-40/44516707": {
    "result": "al gezien",

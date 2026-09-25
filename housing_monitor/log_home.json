@@ -3539,29 +3539,59 @@
    "stage": "voorfilter",
    "t": "2026-09-25T10:42:33+00:00",
    "url": "https://www.rebogroep.nl/nl/aanbod/80e58a6d-acb5-4e2d-91d0-880d1e4b5456-osdorper-ban-897-1069-ga-amsterdam"
+  },
+  {
+   "area": "Oost",
+   "name": "https://ikwilhuren.nu/object/amsterdam-1098xa-535-carolina-macgillavrylaan-a51a98e3bec75423cbd70352049410bf/, 1098 XA (?)",
+   "postcode": "1098XA",
+   "price": 1465,
+   "reason": "te weinig kamers (2)",
+   "result": "afgewezen",
+   "rooms": 2,
+   "site": "IkWilHuren",
+   "size": null,
+   "source": "scraper",
+   "stage": "voorfilter",
+   "t": "2026-09-25T10:52:52+00:00",
+   "url": "https://ikwilhuren.nu/object/amsterdam-1098xa-535-carolina-macgillavrylaan-a51a98e3bec75423cbd70352049410bf/"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "https://www.funda.nl/detail/huur/amsterdam/appartement-mezquitalaan-72/80968376/, 1064 NS (?)",
+   "postcode": "1064NS",
+   "price": 2850,
+   "reason": "buiten de ring (1064 NS)",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Funda",
+   "size": null,
+   "source": "scraper",
+   "stage": "voorfilter",
+   "t": "2026-09-25T10:54:06+00:00",
+   "url": "https://www.funda.nl/detail/huur/amsterdam/appartement-mezquitalaan-72/80968376/"
   }
  ],
  "sites": {
   "123Wonen": {
    "error": null,
    "found": 12,
-   "new": 6,
+   "new": 0,
    "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "Funda": {
    "error": null,
    "found": 15,
-   "new": 15,
+   "new": 5,
    "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "Huispedia": {
    "error": null,
    "found": 10,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "Huurwoningen": {
    "error": null,
@@ -3575,50 +3605,50 @@
    "found": 10,
    "new": 1,
    "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "Mijndak": {
    "error": null,
    "found": 170,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "Pararius": {
    "error": null,
    "found": 31,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "REBO": {
-   "error": null,
-   "found": 7,
-   "new": 7,
-   "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "error": "0 advertentielinks gevonden (klopt link_contains / de URL?)",
+   "found": 0,
+   "new": 0,
+   "ok": false,
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "Rotsvast": {
    "error": "0 advertentielinks gevonden (klopt link_contains / de URL?)",
    "found": 0,
    "new": 0,
    "ok": false,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "VB&T": {
    "error": null,
    "found": 1,
-   "new": 1,
+   "new": 0,
    "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   },
   "Vesteda": {
    "error": null,
    "found": 3,
-   "new": 3,
+   "new": 0,
    "ok": true,
-   "t": "2026-09-25T10:37:46.100042+00:00"
+   "t": "2026-09-25T10:52:45.644219+00:00"
   }
  },
- "updated": "2026-09-25T10:42:56+00:00"
+ "updated": "2026-09-25T10:54:33+00:00"
 }
