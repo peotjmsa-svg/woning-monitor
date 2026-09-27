@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "max_price": 3000,
   "min_rooms": 4,
   "areas": {
