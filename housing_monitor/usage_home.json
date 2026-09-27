@@ -220,6 +220,84 @@
 "usd": 0.01923,
 "ms": 5225,
 "chars": 7271
+},
+{
+"t": "2026-09-27T17:38:08+00:00",
+"site": "Pararius",
+"purpose": "judge_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 261,
+"cache_w": 3108,
+"cache_r": 0,
+"usd": 0.02257,
+"ms": 6811,
+"chars": 5834
+},
+{
+"t": "2026-09-27T17:38:21+00:00",
+"site": "Pararius",
+"purpose": "judge_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 145,
+"cache_w": 1271,
+"cache_r": 1042,
+"usd": 0.01012,
+"ms": 3622,
+"chars": 3431
+},
+{
+"t": "2026-09-27T17:39:17+00:00",
+"site": "Huispedia",
+"purpose": "read_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 454,
+"cache_w": 5164,
+"cache_r": 0,
+"usd": 0.0378,
+"ms": 11187,
+"chars": 12373
+},
+{
+"t": "2026-09-27T17:39:40+00:00",
+"site": "Funda",
+"purpose": "read_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 310,
+"cache_w": 2972,
+"cache_r": 1339,
+"usd": 0.02289,
+"ms": 6359,
+"chars": 8883
+},
+{
+"t": "2026-09-27T17:39:51+00:00",
+"site": "Funda",
+"purpose": "read_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 402,
+"cache_w": 3865,
+"cache_r": 1339,
+"usd": 0.02963,
+"ms": 8568,
+"chars": 12189
+},
+{
+"t": "2026-09-27T17:40:01+00:00",
+"site": "Funda",
+"purpose": "read_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 385,
+"cache_w": 2308,
+"cache_r": 1339,
+"usd": 0.02003,
+"ms": 8066,
+"chars": 6743
 }
 ]
 }

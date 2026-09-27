@@ -44,6 +44,10 @@
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
   },
+  "3e5caed5": {
+   "result": "gemaild",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "4246f9cf": {
    "result": "gemaild",
    "t": "2026-09-25T07:09:11.495154+00:00"
@@ -55,6 +59,10 @@
   "4a43dac0": {
    "result": "al gezien",
    "t": "2026-09-24T19:07:45.603792+00:00"
+  },
+  "4db26207": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "4fbf6e94": {
    "result": "afgewezen",
@@ -108,9 +116,17 @@
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
   },
+  "69cd15ed": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "6ae8f62d": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
+  },
+  "758fa3c3": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "7a45d0a1": {
    "result": "afgewezen",
@@ -251,6 +267,10 @@
   "f51ddcb4": {
    "result": "afgewezen",
    "t": "2026-09-24T18:55:23.250104+00:00"
+  },
+  "fb4b5158": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "ff7e804c": {
    "result": "afgewezen",
@@ -888,6 +908,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
   },
+  "mijndak:382737": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "mijndak:382776": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -915,6 +939,10 @@
   "mijndak:382824": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
+  },
+  "mijndak:382825": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "mijndak:382826": {
    "result": "afgewezen",
@@ -1048,6 +1076,10 @@
    "result": "afgewezen",
    "t": "2026-09-25T03:08:42.510382+00:00"
   },
+  "mijndak:383131": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "mijndak:383138": {
    "result": "afgewezen",
    "t": "2026-09-25T03:08:42.510382+00:00"
@@ -1091,6 +1123,10 @@
   "pc:1013GM:792": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
+  },
+  "pc:1013RP:940": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "pc:1013SZ:720": {
    "result": "afgewezen",
@@ -1316,6 +1352,10 @@
    "result": "gemaild",
    "t": "2026-09-25T07:37:45.901375+00:00"
   },
+  "pc:1056EV:2975": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "pc:1056NM:1228": {
    "result": "gemaild",
    "t": "2026-09-24T20:44:53.029556+00:00"
@@ -1419,6 +1459,10 @@
   "pc:1067ZS:795": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
+  },
+  "pc:1068PM:2950": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "pc:1068PN:2395": {
    "result": "afgewezen",
@@ -1632,6 +1676,10 @@
    "result": "afgewezen",
    "t": "2026-09-25T03:08:42.510382+00:00"
   },
+  "pc:1094CG:2950": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "pc:1094CG:733": {
    "result": "afgewezen",
    "t": "2026-09-24T19:07:45.603792+00:00"
@@ -1672,6 +1720,10 @@
    "result": "al gezien",
    "t": "2026-09-25T10:52:45.644219+00:00"
   },
+  "pc:1097ED:2600": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "pc:1097HZ:2450": {
    "result": "afgewezen",
    "t": "2026-09-25T10:37:46.100042+00:00"
@@ -1705,8 +1757,8 @@
    "t": "2026-09-24T20:44:53.029556+00:00"
   },
   "pc:1102CC:2100": {
-   "result": "afgewezen",
-   "t": "2026-09-24T18:55:23.250104+00:00"
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "pc:1102DG:798": {
    "result": "afgewezen",
@@ -1824,6 +1876,10 @@
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
   },
+  "pc:1186DT:1150": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "pc:1186SN:743": {
    "result": "afgewezen",
    "t": "2026-09-25T03:08:42.510382+00:00"
@@ -1839,6 +1895,10 @@
   "pc:1188BB:733": {
    "result": "afgewezen",
    "t": "2026-09-24T20:44:53.029556+00:00"
+  },
+  "pc:1188HL:933": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "pc:1191HA:955": {
    "result": "afgewezen",
@@ -2076,6 +2136,10 @@
    "result": "afgewezen",
    "t": "2026-09-25T07:37:45.901375+00:00"
   },
+  "url:huispedia.nl/amsterdam/1094cg/borneostraat/25-h": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "url:huispedia.nl/amsterdam/1102rr/bijlmerdreef/685": {
    "result": "afgewezen",
    "t": "2026-09-25T07:37:45.901375+00:00"
@@ -2180,9 +2244,17 @@
    "result": "afgewezen",
    "t": "2026-09-25T10:37:46.100042+00:00"
   },
+  "url:www.123wonen.nl/huur/amsterdam/flat+galerij-portiek/jan+tooropstraat-3619-14": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "url:www.123wonen.nl/huur/amsterdam/hoekwoning/schaarbeekstraat-3617-14": {
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-admiraal-de-ruijterweg-99-2/80977209": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "url:www.funda.nl/detail/huur/amsterdam/appartement-amstelboulevard-180/44516878": {
    "result": "al gezien",
@@ -2192,6 +2264,10 @@
    "result": "al gezien",
    "t": "2026-09-25T10:52:45.644219+00:00"
   },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-borneostraat-25-h/44511393": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
   "url:www.funda.nl/detail/huur/amsterdam/appartement-driekoningenstraat-13-1/44510918": {
    "result": "afgewezen",
    "t": "2026-09-25T10:37:46.100042+00:00"
@@ -2199,6 +2275,10 @@
   "url:www.funda.nl/detail/huur/amsterdam/appartement-fritz-dietrich-kahlenbergstraat-44-d/44516378": {
    "result": "afgewezen",
    "t": "2026-09-25T10:37:46.100042+00:00"
+  },
+  "url:www.funda.nl/detail/huur/amsterdam/appartement-hugo-de-vrieslaan-1/44512832": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "url:www.funda.nl/detail/huur/amsterdam/appartement-mezquitalaan-72/80968376": {
    "result": "afgewezen",
@@ -2299,6 +2379,26 @@
   "url:www.pararius.nl/appartement-te-huur/amsterdam/325e819d/formosastraat": {
    "result": "afgewezen",
    "t": "2026-09-25T09:22:46.324794+00:00"
+  },
+  "url:www.pararius.nl/appartement-te-huur/amsterdam/3e5caed5/borneostraat": {
+   "result": "gemaild",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
+  "url:www.pararius.nl/appartement-te-huur/amsterdam/4db26207/hoogoord": {
+   "result": "al gezien",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
+  "url:www.pararius.nl/appartement-te-huur/amsterdam/69cd15ed/admiraal-de-ruijterweg": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
+  "url:www.pararius.nl/appartement-te-huur/amsterdam/758fa3c3/hugo-de-vrieslaan": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
+  },
+  "url:www.pararius.nl/appartement-te-huur/amsterdam/fb4b5158/oeverpad": {
+   "result": "afgewezen",
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "url:www.rebogroep.nl/nl/aanbod/0ec1f34c-cc0e-4b2c-ba66-626f236138ed-voc-kade-232-1018-lg-amsterdam": {
    "result": "afgewezen",

@@ -3584,29 +3584,149 @@
    "stage": "voorfilter",
    "t": "2026-09-25T11:53:27+00:00",
    "url": "https://www.funda.nl/detail/huur/amsterdam/huis-schaarbeekstraat-24/80975816/"
+  },
+  {
+   "area": "West",
+   "name": "Appartement Admiraal De Ruijterweg in Amsterdam, 1056 EV (West)",
+   "postcode": "1056EV",
+   "price": 2975,
+   "reason": "niet voor studenten, niet voor woningdelers",
+   "result": "afgewezen",
+   "rooms": 4,
+   "site": "Pararius",
+   "size": 82,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-27T17:37:51+00:00",
+   "url": "https://www.pararius.nl/appartement-te-huur/amsterdam/69cd15ed/admiraal-de-ruijterweg"
+  },
+  {
+   "area": "Oost",
+   "name": "Appartement Borneostraat in Amsterdam, 1094 CG (Oost)",
+   "postcode": "1094CG",
+   "price": 2950,
+   "reason": "De woning heeft 4 slaapkamers en past binnen budget (€2950), maar het huurcontract is slechts voor 5 maanden. Het is onduidelijk of dit past bij jullie plannen. De locatie (Indische Buurt, Oost binnen de ring) is acceptabel, maar niet duidelijk een \"goede deal\" gezien de beperkte huurperiode.",
+   "result": "gemaild",
+   "rooms": 5,
+   "site": "Pararius",
+   "size": 96,
+   "source": "scraper",
+   "stage": "Claude (advertentie)",
+   "t": "2026-09-27T17:38:08+00:00",
+   "url": "https://www.pararius.nl/appartement-te-huur/amsterdam/3e5caed5/borneostraat"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "Appartement Oeverpad in Amsterdam, 1068 PM (buiten de ring)",
+   "postcode": "1068PM",
+   "price": 2950,
+   "reason": "buiten de ring (1068 PM)",
+   "result": "afgewezen",
+   "rooms": 5,
+   "site": "Pararius",
+   "size": 169,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-27T17:38:12+00:00",
+   "url": "https://www.pararius.nl/appartement-te-huur/amsterdam/fb4b5158/oeverpad"
+  },
+  {
+   "area": "Oost",
+   "name": "Appartement Hugo de Vrieslaan 1 in Amsterdam, 1097 ED (Oost)",
+   "postcode": "1097ED",
+   "price": 2600,
+   "reason": "De advertentie vermeldt expliciet \"Géén delersvergunning, dus maximaal 2 volwassenen\", terwijl jullie met 3 personen zijn. Dit maakt de woning ongeschikt voor jullie groep.",
+   "result": "afgewezen",
+   "rooms": 5,
+   "site": "Pararius",
+   "size": 131,
+   "source": "scraper",
+   "stage": "Claude (advertentie)",
+   "t": "2026-09-27T17:38:21+00:00",
+   "url": "https://www.pararius.nl/appartement-te-huur/amsterdam/758fa3c3/hugo-de-vrieslaan"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "De Parel 47, 1188 HL (buiten de ring)",
+   "postcode": "1188HL",
+   "price": 933,
+   "reason": "te weinig kamers (3), buiten de ring (1188 HL)",
+   "result": "afgewezen",
+   "rooms": 3,
+   "site": "Mijndak",
+   "size": 60,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-27T17:39:00+00:00",
+   "url": "https://amsterdam.mijndak.nl/HuisDetails"
+  },
+  {
+   "area": "buiten de ring",
+   "name": "Nicolaas Tulplaan 308, 1186 DT (buiten de ring)",
+   "postcode": "1186DT",
+   "price": 1150,
+   "reason": "te weinig kamers (3), buiten de ring (1186 DT)",
+   "result": "afgewezen",
+   "rooms": 3,
+   "site": "Mijndak",
+   "size": 67,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-27T17:39:00+00:00",
+   "url": "https://amsterdam.mijndak.nl/HuisDetails"
+  },
+  {
+   "area": "Centrum",
+   "name": "Nova Zemblastraat 310, 1013 RP (Centrum)",
+   "postcode": "1013RP",
+   "price": 940,
+   "reason": "te weinig kamers (3)",
+   "result": "afgewezen",
+   "rooms": 3,
+   "site": "Mijndak",
+   "size": 46,
+   "source": "scraper",
+   "stage": "filters",
+   "t": "2026-09-27T17:39:00+00:00",
+   "url": "https://amsterdam.mijndak.nl/HuisDetails"
+  },
+  {
+   "area": null,
+   "name": "https://www.123wonen.nl/huur/amsterdam/flat+galerij-portiek/jan+tooropstraat-3619-14,  (?)",
+   "postcode": null,
+   "price": 2750,
+   "reason": "te weinig kamers (3)",
+   "result": "afgewezen",
+   "rooms": 3,
+   "site": "123Wonen",
+   "size": null,
+   "source": "scraper",
+   "stage": "voorfilter",
+   "t": "2026-09-27T17:39:26+00:00",
+   "url": "https://www.123wonen.nl/huur/amsterdam/flat+galerij-portiek/jan+tooropstraat-3619-14"
   }
  ],
  "sites": {
   "123Wonen": {
    "error": null,
    "found": 12,
-   "new": 0,
+   "new": 1,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "Funda": {
    "error": null,
    "found": 15,
-   "new": 0,
+   "new": 3,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "Huispedia": {
    "error": null,
    "found": 10,
-   "new": 0,
+   "new": 1,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "Huurwoningen": {
    "error": null,
@@ -3620,50 +3740,50 @@
    "found": 10,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "Mijndak": {
    "error": null,
-   "found": 170,
-   "new": 0,
+   "found": 172,
+   "new": 3,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "Pararius": {
    "error": null,
-   "found": 31,
-   "new": 0,
+   "found": 30,
+   "new": 5,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "REBO": {
    "error": null,
-   "found": 7,
+   "found": 6,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "Rotsvast": {
    "error": "0 advertentielinks gevonden (klopt link_contains / de URL?)",
    "found": 0,
    "new": 0,
    "ok": false,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "VB&T": {
    "error": null,
    "found": 1,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   },
   "Vesteda": {
    "error": null,
    "found": 3,
    "new": 0,
    "ok": true,
-   "t": "2026-09-25T12:07:45.570134+00:00"
+   "t": "2026-09-27T17:37:46.809422+00:00"
   }
  },
- "updated": "2026-09-25T12:09:34+00:00"
+ "updated": "2026-09-27T17:41:05+00:00"
 }
