@@ -1,0 +1,82 @@
+{
+"calls": [
+{
+"t": "2026-09-27T18:59:15+00:00",
+"site": "Huurwoningen (mail)",
+"purpose": "judge_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 159,
+"cache_w": 1697,
+"cache_r": 0,
+"usd": 0.01258,
+"ms": 4173,
+"chars": 2172
+},
+{
+"t": "2026-09-27T18:59:27+00:00",
+"site": "Huurwoningen (mail)",
+"purpose": "judge_listing",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 444,
+"cache_w": 656,
+"cache_r": 1042,
+"usd": 0.01092,
+"ms": 11696,
+"chars": 2185
+},
+{
+"t": "2026-09-27T18:59:33+00:00",
+"site": "Pararius (mail)",
+"purpose": "report_listings",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 395,
+"cache_w": 1723,
+"cache_r": 0,
+"usd": 0.01627,
+"ms": 5079,
+"chars": 1964
+},
+{
+"t": "2026-09-27T18:59:39+00:00",
+"site": "Pararius (mail)",
+"purpose": "report_listings",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 395,
+"cache_w": 1718,
+"cache_r": 0,
+"usd": 0.01624,
+"ms": 5002,
+"chars": 1951
+},
+{
+"t": "2026-09-27T18:59:43+00:00",
+"site": "Pararius (mail)",
+"purpose": "report_listings",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 167,
+"cache_w": 1607,
+"cache_r": 0,
+"usd": 0.01216,
+"ms": 3502,
+"chars": 1714
+},
+{
+"t": "2026-09-27T18:59:47+00:00",
+"site": "Pararius (mail)",
+"purpose": "report_listings",
+"model": "claude-sonnet-4-5",
+"in": 3,
+"out": 171,
+"cache_w": 1601,
+"cache_r": 0,
+"usd": 0.01218,
+"ms": 3239,
+"chars": 1701
+}
+]
+}

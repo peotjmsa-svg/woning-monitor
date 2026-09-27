@@ -1,3 +1,48 @@
 {
- "items": []
+ "items": [
+  {
+   "keys": [
+    "pc:1013MZ:2750",
+    "addr:houtmankade1013mzwesterpark:2750"
+   ],
+   "listing": {
+    "address": "Houtmankade, 1013MZ (Westerpark)",
+    "city": "Amsterdam",
+    "other_details": "107 m² · 5 kamers · Appartement · Bouwjaar 1926",
+    "price_eur": 2750,
+    "rooms": 5,
+    "size_m2": 107,
+    "url": "http://track.huurwoningen.nl/ls/click?upn=u001.oxVdrKqP5m2pyDGSL9KjB6kbMW9ajMVQQtMs533-2FO7wI4dJwAx-2FLO346guhkQ6BN1qFudCQAxE4X1xfZH-2B7SxBGpTya-2FTH-2FgIfG4n8FV00zMKihjxPF81X1aw6-2BHHSutALmBkUIdMGr96cYQnULyY2FzDqjihnlGHAAPCK2jr4uxRDI4Zyx4lXT99GkfAxgEE2f-2Bdc9F9Rkz76s-2BpN3U1wNNFAzgR73GykXidi-2BNVyt0ZFQ2IRCzntNfBpCk61s-2FSn3wR0mbHYMfAHNDmfpV5w-3D-3DpgBI_YwGuGN2zlWl7ku6m1C1rpV7CiZIleKU9H8-2FD6MOJoQD45OfTr6cfqFEJVahWrn-2B3ClLp-2FGBZG-2FnkVPN4zcEpkJqFyQlI7PUwS0t4MiGyUrAc0Hv0TvxSCQYpZf904IjNxukSltuNGzFwV2bMkkVdoEeF4nnAAsQTEI3fjQjSnmemD20VOkhMSsaNVpRPp95Dlfm-2BOCB22W5gEHZadbQrBfKtGLHEgi-2BvC-2BvwQWc4rOBDtgDGQeh410Kbcn4qA4QvLuFYFtPIwM2cZKkHQEd2BLes6Kqq2dFYOxUmMaRYPc2zrIBiaPJNhfcAWt-2F21aLPYOoGlbIAaNXnPmJmi01oqrq3Z6lt88iFvBioM828HGIo9wJHFTaeyrrQ3D4hYyffDJAtPqjE1njxaYnxUwwhgzoip8sBfCOQDic6o4iZp36-2BAgu1RC3IM899XkIRkVl5TYuJbOaSMNM0HRkdfv8PzxBt-2FEyVTCTN2Qbo7X9ejbThyKMt02A2I0HFT4qZycNhi1T7pJepz-2FrOBH05wD3t2aA1gPELUnA9wL4H2Zapw1g9vigBMo5UlKQ4A75r9wt2QiX04YEOF25u-2FxF3ppyYo0qmxD2pqyhiSIdubCMU6r2grI4NK1PlPKu99zTxAVOPePkkzD0FYux2GDAMocF-2B5w-3D-3D"
+   },
+   "queued_at": "2026-09-27T18:59:05.842165+00:00",
+   "site": "Huurwoningen",
+   "verdict": {
+    "reason": "Woning voldoet aan alle criteria: Westerpark ligt binnen de A10-ring, 5 kamers is voldoende voor 3 personen, prijs van €2750 past binnen budget van €3000. Geen inkomenseis of andere uitsluitende voorwaarden vermeld.",
+    "risks": [],
+    "verdict": "fit"
+   }
+  },
+  {
+   "keys": [
+    "pc:1016GM:2500",
+    "addr:molenpad1016gmcentrumwest:2500"
+   ],
+   "listing": {
+    "address": "Molenpad, 1016GM (Centrum-West)",
+    "city": "Amsterdam",
+    "other_details": "100 m² · 4 kamers · Gestoffeerd · Appartement · Bouwjaar 1778",
+    "price_eur": 2500,
+    "rooms": 4,
+    "size_m2": 100,
+    "url": "http://track.huurwoningen.nl/ls/click?upn=u001.oxVdrKqP5m2pyDGSL9KjB6kbMW9ajMVQQtMs533-2FO7wI4dJwAx-2FLO346guhkQ6BNGlLSqn21SieejL7SwFH-2F2VjbuxzTR4OuOuYoQ-2FIKL6XjmoYB8B6edCuldaolfoAqfE1dxgP-2FgOGgb5DL-2FG-2FOK19xFVZvQqwd2sa3RU-2BBkY6JFLyHdNIss6XEcuTLiDRYIW3ls2ITh0v6Ry7d68Zh1QysuptwpK99lxaDn6SVoWDB9E4NXN-2Bvn15bmt-2B1bRvbVILOta1q6cvfOcUxTnqxaw-3D-3DK7GM_YwGuGN2zlWl7ku6m1C1rpV7CiZIleKU9H8-2FD6MOJoQD45OfTr6cfqFEJVahWrn-2B3wy6yoj6mpijGD5GHmKRdPfoox65DQvkH6NwU7MJqE2JXY-2BoHhgR-2FdgklKCZFJGbb-2BYqD0NAyPDmWq5xJgxdgT4OGICkgN4RNMEOtDMFVrXYYNh4AsFA37c-2BpfT22uubrJ5-2BY78lhL2x9bkRZvJjegOc95b-2Fog2xYL8hzwzP6OmUPz5p-2Fqz17E1GFEjoDC17rKVyJA2XdETgchRz4Eqz5Dy5TQHB-2FMcoFWT1bTsjjUp9mDCN-2FazSKXSZh9NWu9nTe7AvqxhJU-2FgFUzQVWmt69NCbJ8-2Fms8aRopCPq9fJ7skIHbJFjxrxzmixIq0rzDze90rcAxO-2Fs9x6LZHX-2Buk40yw6LtuMq7Jkz-2F1cnpQndQtxmo5jKFV2D8nU39fOHqPxQ85jHBZJHXZx9TTh-2FeUeN4AdJDYk5tGNcMRp6iJkkkTeEdfgF4jYEyv7dgyRuKx9-2BesSaNP7ohk-2F-2FJ-2BQiqlufrSi4-2FUz7WDjZTzLhBd9WhODHnFBiYdhop1eoYjLtnm3ThOCtmj7MxX128RXcizZQUCOtgDXvfjilkRVQBfGve4nmz5OzeHX3qBiyE6nQrv-2FaZ70Voho6k-2FJaHM2yppVP0Q-3D-3D"
+   },
+   "queued_at": "2026-09-27T18:59:05.842165+00:00",
+   "site": "Huurwoningen",
+   "verdict": {
+    "reason": "Centrum-West binnen de ring, €2500/maand, 4 kamers, geen uitsluitingen of inkomenseis zichtbaar. Alle criteria lijken gehaald.",
+    "risks": [],
+    "verdict": "fit"
+   }
+  }
+ ]
 }
